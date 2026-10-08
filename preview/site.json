@@ -1,0 +1,19 @@
+{
+ "salt": "RpDMf5E9Q6UN5Txz+lFH1A==",
+ "dir": "38c240711bad06bd",
+ "sources": {
+  "2026-10-08-dashboard.html": "df368eaa5190acd9ca4fec35c7203e33deb2e7037940a0575e881542ddfe58ca",
+  "2026-10-08-pdf.html": "ccd8034e4fe4d507c835ac501cd8eed39b33e68ae71c1287aae7328374ccce3a",
+  "2026-10-08-email.html": "d86e337a000ccd82339c8f8dd961f14da8a5126a7721a54a2257f8ceaaf5513d",
+  "2026-10-08-summary.bin": "474ccd401ade52df137cc0e38d9b3bdaaf055fb719adc056e84081ebc71a89c9",
+  "2026-10-07-dashboard.html": "e2e49aa3bafe578f898fa8f05e917aa89e8716bb8ae2a43d5c61c69e2bd35b34",
+  "2026-10-07-pdf.html": "cdef3e6704d72ed80d8dd8d8570454443a9a8525f4db01c635cabf5218935f9b",
+  "2026-10-07-email.html": "9b344e7353035c8463bec8db54febd94aea64d261d38741ad1df3ac5f94a05d1",
+  "2026-10-07-summary.bin": "8864d261a7a30047d904f7402c247c37eb5b3fd49a67c298cf9d9acf795179fb",
+  "2026-10-06-dashboard.html": "794d83116c1d5d1d7ddd5dee9e2a9939e7e33db810aa2c40ad68026f00892dbb",
+  "2026-10-06-pdf.html": "56c95008f583dddb4b3e42cf9f74124ebe2fa6b87277003ac458aae9dfaf9382",
+  "2026-10-06-email.html": "b2c2a927b53913ff3478ff14513dbe3719d1dbfe4805a23fa295c2f51a375f07",
+  "2026-10-06-summary.bin": "f2c32374c03c412528fc27e8e6bd4ab91810e0db82e150aacab2672debea64dc"
+ },
+ "key_check": "fa08fcc84f5f4e67"
+}
