@@ -1,0 +1,44 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive,nosnippet"><meta name="referrer" content="no-referrer">
+<title>Multi-Asset Research 2026-10-08 · Interactive dashboard</title><style>body{font:15px -apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:40px 16px;color:#14213d;background:#f6f7f9}a{color:#1f4e8c}</style></head>
+<body><p id="msg">Opening…</p>
+<script>
+
+const SALT = "tvj/QKzB6NM2xXvBZYUxmA==", ITER = 310000;
+const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function keyFrom(raw) { return crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["decrypt"]); }
+async function derive(pw) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({name: "PBKDF2", hash: "SHA-256", salt: b64(SALT), iterations: ITER}, base, 256);
+  return new Uint8Array(bits);
+}
+async function decrypt(raw, payload) {
+  const buf = typeof payload === "string" ? b64(payload) : new Uint8Array(payload);
+  return new Uint8Array(await crypto.subtle.decrypt({name: "AES-GCM", iv: buf.slice(0, 12)}, await keyFrom(raw), buf.slice(12)));
+}
+function storedKey() { try { const k = localStorage.getItem("mas_key_" + SALT); return k ? b64(k) : null; } catch (e) { return null; } }
+function storeKey(raw) { try { localStorage.setItem("mas_key_" + SALT, btoa(String.fromCharCode(...raw))); } catch (e) {} }
+function forget() { try { localStorage.removeItem("mas_key_" + SALT); } catch (e) {} }
+
+const KIND = "dashboard", NAME = "dashboard.html", HOME = "../", BIN = "2026-10-08-dashboard.bin", GZ = true;
+(async () => {
+  const raw = storedKey();
+  if (!raw) { location.replace(HOME + "?next=" + encodeURIComponent(location.pathname.split("/").slice(-2).join("/"))); return; }
+  let bytes;
+  try {
+    const res = await fetch(BIN, {cache: "no-cache"});
+    bytes = await decrypt(raw, await res.arrayBuffer());
+  } catch (e) { forget(); location.replace(HOME); return; }
+  if (GZ) bytes = new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
+  if (KIND === "pdf") {
+    const url = URL.createObjectURL(new Blob([bytes], {type: "application/pdf"}));
+    document.getElementById("msg").innerHTML = `<a href="${url}" download="${NAME}">Download ${NAME}</a> · <a href="${HOME}">Archive</a>`;
+    location.href = url;
+  } else {
+    const html = new TextDecoder().decode(bytes), f = document.createElement("iframe");
+    f.style.cssText = "position:fixed;inset:0;width:100%;height:100%;border:0;background:#fff";
+    f.srcdoc = html; document.body.style.margin = "0"; document.body.replaceChildren(f);
+    const t = html.match(/<title>([^<]*)<\/title>/i); if (t) document.title = t[1];
+  }
+})();
+</script></body></html>
