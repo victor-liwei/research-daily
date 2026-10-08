@@ -1,7 +1,9 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow,noarchive,nosnippet"><meta name="referrer" content="no-referrer">
 <title>Market Pulse Research Dashboard</title>
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("mr-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("mr-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}
+document.documentElement.dataset.look="broadsheet";try{const l=localStorage.getItem("mr-look");if(/^(night|broadsheet|greenback)$/.test(l))document.documentElement.dataset.look=l}catch(e){}
+const PICK=false;let ART=0;try{if(PICK&&+localStorage.getItem("mr-art"))ART=+localStorage.getItem("mr-art")}catch(e){}</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2313294b'/%3E%3Cpath d='M5 16h5l3-8 4 14 3-6h7' stroke='%2386b6ef' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <!-- template: site index v2.0.0 (archive side panel). Palette follows the dashboard template. -->
 <style>
@@ -29,6 +31,71 @@
   --page:#0d0d0d;--surface:#1a1a19;--surface-2:#232321;--ink:#ffffff;--ink-2:#c3c2b7;--muted:#898781;
   --line:rgba(255,255,255,.09);--accent:#86b6ef;--accent-2:#3987e5;--hero:#0f1f38;--hero-2:#16305a;
   --pos:#3987e5;--neg:#e66767;--ow:#6da7ec;--uw:#e66767;--chip:#2c2c2a;--sel:rgba(57,135,229,.16);--shadow:none;--side-a:#12264a;--side-b:#090f1a;}
+/* banner looks: each look sets the hero, bar, side panel and artwork tokens. Artwork is drawn by bannerArt(). */
+:root{--bar:#13294b;--on-bar:#ffffff;--on-bar-2:#b9c6da;--bar-line:rgba(255,255,255,.14);
+  --cta-bg:#ffffff;--cta-fg:#13294b;--cta-hover:#e8eef8;--ring:#9cc6ff;--sel-ring:#86b6ef;
+  --glass:rgba(255,255,255,.06);--glass-2:rgba(255,255,255,.13);--tape-bg:rgba(0,0,0,.18);
+  --art-ink:#a9c8f0;--art-paper:rgba(214,228,247,.07);--art-note:rgba(170,205,190,.10);--art-gold:#86b6ef;--art-up:#46c2a8;--art-dn:#e46f6f;--art-op:.62;
+  --head-font:var(--sans);--brand-font:var(--sans);--hero-tex:none}
+:root[data-theme="dark"]{--bar:#0f1f38}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bar:#0f1f38}}
+
+:root[data-look="broadsheet"]{
+  --hero:#f3eee2;--hero-2:#e6dcc6;--on-hero:#17140f;--on-hero-2:#5f574a;--on-hero-line:rgba(23,20,15,.16);--hero-glow:#9b2a22;
+  --bar:#1c1a17;--on-bar:#f3eee2;--on-bar-2:#b8af9f;--bar-line:rgba(243,238,226,.14);
+  --cta-bg:#17140f;--cta-fg:#f6f1e4;--cta-hover:#2e2a24;--ring:#b3362c;--sel-ring:#dccaa0;
+  --glass:rgba(255,253,246,.72);--glass-2:rgba(255,253,246,.95);--tape-bg:rgba(23,20,15,.06);
+  --art-ink:#2a2219;--art-paper:rgba(255,252,243,.75);--art-note:rgba(196,210,190,.45);--art-gold:#8a6a2b;--art-up:#1f6b4f;--art-dn:#a8322a;--art-op:.5;
+  --side-a:#2c2a26;--side-b:#131210;--side-glow:rgba(230,212,170,.12);--side-on:rgba(243,238,226,.10);
+  --side-ink:#f3eee2;--side-ink-2:#cfc6b4;--side-muted:#9a917f;--side-line:rgba(243,238,226,.11);--side-cal:#9b2a22;
+  --head-font:"Iowan Old Style",Charter,Georgia,"Times New Roman",serif;--brand-font:Georgia,"Times New Roman",serif;
+  --hero-tex:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .11 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E")}
+:root[data-look="broadsheet"][data-theme="dark"]{
+  --hero:#1e1c19;--hero-2:#2a2621;--on-hero:#f3eee2;--on-hero-2:#b8af9f;--on-hero-line:rgba(243,238,226,.15);--hero-glow:#e0867a;
+  --bar:#141311;--cta-bg:#f3eee2;--cta-fg:#17140f;--cta-hover:#e2d9c6;--ring:#e0867a;
+  --glass:rgba(255,255,255,.05);--glass-2:rgba(255,255,255,.1);--tape-bg:rgba(0,0,0,.22);
+  --art-ink:#eadfc8;--art-paper:rgba(243,238,226,.06);--art-note:rgba(196,210,190,.08);--art-gold:#d4b46c;--art-up:#5fb894;--art-dn:#e0786b;--art-op:.4;
+  --side-a:#24221f;--side-b:#0e0d0c}
+@media (prefers-color-scheme:dark){:root[data-look="broadsheet"]:not([data-theme="light"]){
+  --hero:#1e1c19;--hero-2:#2a2621;--on-hero:#f3eee2;--on-hero-2:#b8af9f;--on-hero-line:rgba(243,238,226,.15);--hero-glow:#e0867a;
+  --bar:#141311;--cta-bg:#f3eee2;--cta-fg:#17140f;--cta-hover:#e2d9c6;--ring:#e0867a;
+  --glass:rgba(255,255,255,.05);--glass-2:rgba(255,255,255,.1);--tape-bg:rgba(0,0,0,.22);
+  --art-ink:#eadfc8;--art-paper:rgba(243,238,226,.06);--art-note:rgba(196,210,190,.08);--art-gold:#d4b46c;--art-up:#5fb894;--art-dn:#e0786b;--art-op:.4;
+  --side-a:#24221f;--side-b:#0e0d0c}}
+
+:root[data-look="greenback"]{
+  --hero:#0f2a20;--hero-2:#1d4d39;--on-hero:#f6f1e1;--on-hero-2:#b7c8b6;--on-hero-line:rgba(246,241,225,.15);--hero-glow:#dcbd72;
+  --bar:#0c2219;--on-bar:#f6f1e1;--on-bar-2:#b7c8b6;--bar-line:rgba(246,241,225,.13);
+  --cta-bg:#f2e4ba;--cta-fg:#0f2a20;--cta-hover:#f8eed2;--ring:#dcbd72;--sel-ring:#dcbd72;
+  --art-ink:#cfe2c6;--art-paper:rgba(230,240,222,.07);--art-note:rgba(220,189,114,.08);--art-gold:#dcbd72;--art-up:#dcbd72;--art-dn:#e8957a;--art-op:.6;
+  --side-a:#153a2c;--side-b:#07150f;--side-glow:rgba(220,189,114,.14);--side-on:rgba(246,241,225,.10);
+  --side-ink:#eef3ea;--side-ink-2:#bccbb9;--side-muted:#86a08d;--side-line:rgba(255,255,255,.10);--side-cal:#a8843a;
+  --head-font:"Iowan Old Style",Charter,Georgia,"Times New Roman",serif}
+:root[data-look="greenback"][data-theme="dark"]{--hero:#0b2018;--bar:#08180f}
+@media (prefers-color-scheme:dark){:root[data-look="greenback"]:not([data-theme="light"]){--hero:#0b2018;--bar:#08180f}}
+
+/* artwork layers */
+.art{position:absolute;inset:0;opacity:var(--art-op);pointer-events:none}
+.art svg{display:block;width:100%;height:100%}
+.art .k{stroke:var(--art-ink);fill:none}.art .kf{fill:var(--art-ink)}.art .pp{fill:var(--art-paper)}.art .nt{fill:var(--art-note)}
+.art .g{stroke:var(--art-gold);fill:none}.art .gf{fill:var(--art-gold)}
+.art .cu{fill:var(--art-up);stroke:var(--art-up)}.art .cd{fill:var(--art-dn);stroke:var(--art-dn)}
+.art .tu{fill:var(--art-up)}.art .td{fill:var(--art-dn)}
+.art .ros{display:none}:root[data-look="greenback"] .art .ros{display:inline}
+.veil{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,var(--hero) 0%,var(--hero) 36%,color-mix(in srgb,var(--hero) 78%,transparent) 50%,color-mix(in srgb,var(--hero) 25%,transparent) 68%,color-mix(in srgb,var(--hero) 6%,transparent) 100%)}
+.lockscreen .art{opacity:calc(var(--art-op) * .8)}
+.lockscreen .veil{background:radial-gradient(520px 360px at 50% 50%,color-mix(in srgb,var(--hero) 85%,transparent),transparent 75%)}
+.lookpick{position:relative}
+.lookmenu{position:absolute;right:0;top:42px;min-width:210px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 36px rgba(0,0,0,.2);padding:6px;z-index:50}
+.lookmenu h4{margin:4px 10px 6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lookmenu button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:8px 10px;border-radius:8px;cursor:pointer;text-align:left;font-size:13.5px;font-weight:600;color:var(--ink)}
+.lookmenu button:hover{background:var(--surface-2)}.lookmenu button small{display:block;font-weight:500;font-size:11.5px;color:var(--muted)}
+.lookmenu button.on::after{content:"";margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--accent-2)}
+.sw{width:26px;height:26px;border-radius:7px;border:1px solid var(--line);flex:none}
+.sw.night{background:linear-gradient(135deg,#1c3d6e,#0b1628)}.sw.broadsheet{background:linear-gradient(135deg,#f3eee2 50%,#1c1a17 50%)}.sw.greenback{background:linear-gradient(135deg,#1d4d39 55%,#dcbd72 55%)}
+.artbar{position:fixed;z-index:60;right:16px;bottom:16px;display:flex;align-items:center;gap:6px;padding:6px;border-radius:12px;background:rgba(15,15,15,.86);box-shadow:0 8px 28px rgba(0,0,0,.3);font-size:13px;color:#eee}
+.artbar button{border:0;border-radius:8px;width:32px;height:32px;background:rgba(255,255,255,.1);color:#fff;cursor:pointer;font-size:16px}
+.artbar select{height:32px;border-radius:8px;border:0;padding:0 8px;font:inherit;font-weight:600;background:#fff;color:#111}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{margin:0}
@@ -40,15 +107,14 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
 .num{font-variant-numeric:tabular-nums}
 
 /* lock screen */
-.lockscreen{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(1200px 500px at 85% 110%,var(--hero-2),transparent),var(--hero);position:relative;overflow:hidden}
-.lockscreen svg.motif{position:absolute;inset:auto 0 0 0;width:100%;height:46%;opacity:.35}
+.lockscreen{min-height:100vh;display:grid;place-items:center;padding:24px 16px;background:var(--hero-tex),radial-gradient(1200px 500px at 85% 110%,var(--hero-2),transparent),var(--hero);position:relative;overflow:hidden}
 .lockcard{position:relative;width:100%;max-width:400px;background:var(--surface);color:var(--ink);border-radius:16px;padding:28px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .lockcard .brand{color:var(--ink);margin-bottom:22px}
 .lockcard h2{margin:0 0 4px;font-size:20px;letter-spacing:-.01em}
 .lockcard p{margin:0 0 18px;color:var(--muted)}
 .lockcard input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:var(--page);color:var(--ink);outline:none}
 .lockcard input:focus{border-color:var(--accent-2);box-shadow:0 0 0 3px var(--sel)}
-.lockcard .go{width:100%;margin-top:12px;border:0;border-radius:10px;background:var(--accent);color:var(--surface);font-weight:650;padding:12px;cursor:pointer}
+.lockcard .go{width:100%;margin-top:12px;border:0;border-radius:10px;background:var(--bar);color:#fff;font-weight:650;padding:12px;cursor:pointer}
 .err{color:var(--neg);min-height:20px;margin-top:10px;font-size:13px}
 
 /* brand */
@@ -59,11 +125,12 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
 .brand .nm{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* top bar */
-.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;height:var(--top);display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--hero);color:var(--on-hero);border-bottom:1px solid var(--on-hero-line)}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;height:var(--top);display:flex;align-items:center;gap:12px;padding:0 16px;background:var(--bar);color:var(--on-bar);border-bottom:1px solid var(--bar-line)}
 .topbar .brand .mk{background:rgba(255,255,255,.08)}
-.topbar .brand small{color:var(--on-hero-2)}
+.topbar .brand small{color:var(--on-bar-2)}
+.topbar .brand .nm{font-family:var(--brand-font)}
 .topbar .sp{flex:1}
-.tb-btn{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:9px;border:1px solid var(--on-hero-line);background:rgba(255,255,255,.06);color:var(--on-hero);font-size:13px;font-weight:550;cursor:pointer;white-space:nowrap}
+.tb-btn{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:9px;border:1px solid var(--bar-line);background:rgba(255,255,255,.06);color:var(--on-bar);font-size:13px;font-weight:550;cursor:pointer;white-space:nowrap}
 .tb-btn:hover{background:rgba(255,255,255,.12)}
 .menu{display:none}
 #theme{padding:0 10px}.ic-sun{display:none}:root[data-theme="dark"] .ic-sun{display:block}:root[data-theme="dark"] .ic-moon{display:none}
@@ -79,11 +146,11 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
 .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--side-muted)}
 .search input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--side-line);border-radius:10px;background:rgba(255,255,255,.07);color:var(--side-ink);font-size:14px;outline:none}
 .search input::placeholder{color:var(--side-muted)}
-.search input:focus{border-color:#86b6ef}
+.search input:focus{border-color:var(--sel-ring)}
 .month{font-size:11.5px;font-weight:700;color:var(--side-muted);letter-spacing:.06em;text-transform:uppercase;padding:10px 6px 2px}
 .ed{display:flex;gap:11px;padding:10px 8px;border-radius:11px;color:var(--side-ink);border:1px solid transparent}
 .ed:hover{background:var(--side-hover)}
-.ed.on{background:var(--side-on);border-color:rgba(134,182,239,.45);box-shadow:inset 3px 0 0 #86b6ef}
+.ed.on{background:var(--side-on);border-color:color-mix(in srgb,var(--sel-ring) 50%,transparent);box-shadow:inset 3px 0 0 var(--sel-ring)}
 .cal{flex:none;width:44px;border-radius:9px;overflow:hidden;border:1px solid var(--side-line);background:rgba(255,255,255,.06);text-align:center;align-self:flex-start}
 .cal b{display:block;background:var(--side-cal);color:#ffffff;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 0}
 .cal span{display:block;font-size:18px;font-weight:700;line-height:28px}
@@ -108,30 +175,32 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
 .card-b{padding:12px 18px 16px}
 
 /* hero */
-.hero{position:relative;overflow:hidden;border-radius:16px;background:radial-gradient(900px 380px at 100% 120%,var(--hero-2),transparent),var(--hero);color:var(--on-hero)}
-.hero svg.motif{position:absolute;left:0;right:0;bottom:56px;width:100%;height:58%;opacity:.5;pointer-events:none}
-.hero-in{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;padding:24px 26px 20px}
+.hero{position:relative;overflow:hidden;border-radius:16px;background:var(--hero-tex),radial-gradient(900px 380px at 100% 120%,var(--hero-2),transparent),var(--hero);color:var(--on-hero);box-shadow:var(--shadow)}
+.hero-in{position:relative;padding:28px 30px 22px;min-height:262px}
+.hero-tx{max-width:min(660px,58%)}
+.meta{display:flex;flex-wrap:wrap;gap:4px 0;color:var(--on-hero-2);font-size:13.5px}.meta b{color:var(--on-hero);font-weight:650}
+.meta span+span::before{content:"";display:inline-block;width:3px;height:3px;border-radius:50%;background:currentColor;opacity:.7;margin:0 10px;vertical-align:middle}
 .eyebrow{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--hero-glow)}
 .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:#46c2a8;box-shadow:0 0 0 4px rgba(70,194,168,.18)}
 .eyebrow .dot.old{background:var(--on-hero-2);box-shadow:none}
-.hero h1{margin:10px 0 6px;font-size:clamp(21px,2.6vw,29px);line-height:1.22;font-weight:700;letter-spacing:-.015em;text-wrap:balance;max-width:34em}
+.hero h1{font-family:var(--head-font);margin:10px 0 6px;font-size:clamp(21px,2.6vw,29px);line-height:1.22;font-weight:700;letter-spacing:-.015em;text-wrap:balance;max-width:34em}
 .hero .date{color:var(--on-hero-2);font-size:14px}
 .ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-.cta{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 15px;border-radius:10px;font-weight:650;font-size:14px;border:1px solid var(--on-hero-line);background:rgba(255,255,255,.07);color:var(--on-hero)}
-.cta:hover{background:rgba(255,255,255,.14)}
-.cta.primary{position:relative;background:#ffffff;color:#13294b;border-color:#ffffff}
-.cta.primary::before,.cta.primary::after{content:"";position:absolute;inset:-2px;border-radius:12px;border:2px solid #9cc6ff;pointer-events:none;animation:sonar 2.8s ease-out infinite}
+.cta{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 15px;border-radius:10px;font-weight:650;font-size:14px;border:1px solid var(--on-hero-line);background:var(--glass);color:var(--on-hero);backdrop-filter:blur(6px)}
+.cta:hover{background:var(--glass-2)}
+.cta.primary{position:relative;background:var(--cta-bg);color:var(--cta-fg);border-color:var(--cta-bg)}
+.cta.primary::before,.cta.primary::after{content:"";position:absolute;inset:-2px;border-radius:12px;border:2px solid var(--ring);pointer-events:none;animation:sonar 2.8s ease-out infinite}
 .cta.primary::after{animation-delay:1.4s}
 .cta.primary .go{margin-left:2px;transition:transform .15s}.cta.primary:hover .go{transform:translateX(3px)}
 @keyframes sonar{0%{inset:-2px;opacity:.6;border-radius:12px}100%{inset:-12px;opacity:0;border-radius:20px}}
 .ctas .hint{flex-basis:100%;font-size:12.5px;color:var(--on-hero-2);margin-top:-2px}
-.cta.primary:hover{background:#e8eef8}
+.cta.primary:hover{background:var(--cta-hover)}
 .hstats{display:grid;grid-template-columns:repeat(2,minmax(96px,auto));gap:10px;align-content:start}
-.hs{border:1px solid var(--on-hero-line);background:rgba(255,255,255,.05);border-radius:12px;padding:10px 14px}
+.hs{border:1px solid var(--on-hero-line);background:var(--glass);backdrop-filter:blur(8px);border-radius:12px;padding:10px 14px}
 .hs .l{font-size:11.5px;color:var(--on-hero-2)}
 .hs .v{font-size:22px;font-weight:700;line-height:1.2}
 .hs .v small{font-size:12px;font-weight:600;color:var(--on-hero-2);margin-left:3px}
-.tape{position:relative;display:flex;flex-wrap:wrap;gap:6px 20px;padding:12px 26px;border-top:1px solid var(--on-hero-line);background:rgba(0,0,0,.14);font-size:13px}
+.tape{position:relative;display:flex;flex-wrap:wrap;gap:6px 20px;padding:12px 26px;border-top:1px solid var(--on-hero-line);background:var(--tape-bg);backdrop-filter:blur(6px);font-size:13px}
 .tape div{white-space:nowrap}.tape span{color:var(--on-hero-2);margin-right:6px}.tape b{font-weight:650}
 .tape .asof{margin-left:auto;color:var(--on-hero-2);font-size:12px}
 
@@ -206,11 +275,13 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
   .strip::-webkit-scrollbar{display:none}
   .sc{flex:none;display:flex;flex-direction:column;align-items:center;min-width:62px;padding:6px 10px;border-radius:10px;border:1px solid var(--side-line);color:var(--side-ink);background:rgba(255,255,255,.06);font-size:11px}
   .sc b{font-size:16px;line-height:1.2}
-  .sc.on{background:#ffffff;border-color:#ffffff;color:#13294b}
-  .sc.all{justify-content:center;gap:2px;color:#86b6ef;font-weight:650}
+  .sc.on{background:var(--side-ink);border-color:var(--side-ink);color:var(--side-b)}
+  .sc.all{justify-content:center;gap:2px;color:var(--sel-ring);font-weight:650}
   .main{padding:14px 16px 32px}
   .two{grid-template-columns:1fr}
-  .hero-in{grid-template-columns:1fr;padding:20px 18px 16px}
+  .hero-in{padding:150px 18px 16px;min-height:0}.hero-tx{max-width:none}
+  .hero .art{bottom:auto;height:180px}.hero .art g.fade{mask:none}
+  .hero .veil{bottom:auto;height:181px;background:linear-gradient(180deg,transparent 35%,var(--hero) 100%)}
   .hstats{grid-template-columns:repeat(4,minmax(0,1fr))}
   .tape{padding:10px 18px}.tape .asof{margin-left:0;width:100%}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -222,13 +293,14 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
   .hs .v{font-size:19px}
   .cta{flex:1 1 auto;justify-content:center}
   .cta.primary{flex-basis:100%}
+  .meta span:first-child{flex-basis:100%}.meta span:nth-child(2)::before{display:none}
   .idea{grid-template-columns:28px minmax(0,1fr)}.idea .conv{display:none}
 }
 @media (prefers-reduced-motion:reduce){.skel,.side,.scrim,.cta .go{animation:none!important;transition:none!important}}
 </style></head><body>
 
 <div class="lockscreen" id="lock">
-  <svg class="motif" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34 L8 31 L15 33 L23 26 L31 28 L39 20 L47 23 L55 15 L63 18 L71 10 L79 13 L88 6 L100 3" stroke="#86b6ef" stroke-width="1.4" vector-effect="non-scaling-stroke" fill="none"/><path d="M0 38 L10 36 L19 37 L28 31 L37 33 L46 27 L55 29 L64 23 L73 26 L82 19 L100 16" stroke="#46c2a8" stroke-width="1" vector-effect="non-scaling-stroke" fill="none" opacity=".7"/></svg>
+  <div class="art" id="lockart"></div><div class="veil"></div>
   <div class="lockcard">
     <div class="brand"><span class="mk"><svg viewBox="0 0 24 24"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg></span><span class="nm">Market Pulse Research Dashboard<small>Daily cross-asset views and trade ideas</small></span></div>
     <h2>Sign in</h2><p>This archive is private. Enter the access password.</p>
@@ -242,6 +314,11 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
     <button class="tb-btn menu" id="menu" aria-label="Show archive"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></button>
     <div class="brand"><span class="mk"><svg viewBox="0 0 24 24"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg></span><span class="nm">Market Pulse Research Dashboard<small>Equities · Rates · Credit · FX · Commodities</small></span></div>
     <span class="sp"></span>
+    <div class="lookpick"><button class="tb-btn" id="look" aria-haspopup="true" aria-expanded="false" title="Style"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11.5" r="1.2"/><circle cx="10.5" cy="7.5" r="1.2"/><circle cx="15.5" cy="8" r="1.2"/></svg><span class="lbl" id="lookname">Style</span></button>
+      <div class="lookmenu" id="lookmenu" hidden><h4>Style</h4>
+        <button data-k="night"><i class="sw night"></i><span>Night<small>Navy with blue line-art</small></span></button>
+        <button data-k="broadsheet"><i class="sw broadsheet"></i><span>Broadsheet<small>Newsprint and ink</small></span></button>
+        <button data-k="greenback"><i class="sw greenback"></i><span>Greenback<small>Banknote green and gold</small></span></button></div></div>
     <button class="tb-btn" id="theme" aria-label="Switch light or dark mode" title="Light / dark"><svg class="i ic-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
     <button class="tb-btn" id="out"><svg class="i" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg><span class="lbl">Sign out</span></button>
   </header>
@@ -277,7 +354,7 @@ function storedKey() { try { const k = localStorage.getItem("mpr_key_" + SALT); 
 function storeKey(raw) { try { localStorage.setItem("mpr_key_" + SALT, btoa(String.fromCharCode(...raw))); } catch (e) {} }
 function forget() { try { localStorage.removeItem("mpr_key_" + SALT); } catch (e) {} }
 
-const MANIFEST = "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";
+const MANIFEST = "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";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const P = d => '<svg class="i" viewBox="0 0 24 24">' + d + '</svg>';
 const IC = {
@@ -320,12 +397,158 @@ function spark(vals, cls, h = 34) {
     <polyline points="${line}" fill="none" stroke="currentColor" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
     <circle cx="${last[0]}" cy="${last[1]}" r="2.2" fill="currentColor" vector-effect="non-scaling-stroke"/></svg>`;
 }
-function motif(vals) {
-  if (!vals || vals.length < 2) return "";
-  const lo = Math.min(...vals), hi = Math.max(...vals), r = hi - lo || 1, n = vals.length - 1;
-  const line = vals.map((v, i) => (i / n * 100).toFixed(2) + "," + (6 + (1 - (v - lo) / r) * 30).toFixed(2)).join(" ");
-  return `<svg class="motif" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="hg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#86b6ef" stop-opacity=".35"/><stop offset="1" stop-color="#86b6ef" stop-opacity="0"/></linearGradient></defs>
-    <polygon points="0,40 ${line} 100,40" fill="url(#hg)"/><polyline points="${line}" fill="none" stroke="#86b6ef" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>`;
+/* Banner artwork: engraved-style still lifes drawn as SVG, one of twelve scenes. Candles, charts and quote rows
+   come from the edition's ACWI closes and market tiles; colours come from the style tokens. */
+let ART_N = 0;
+const ART_NAMES = ["Front page", "Morning paper", "Greenbacks", "Paper and notes", "Library", "Bookshelf",
+  "Quote board", "Candlesticks", "Ticker ribbon", "Globe", "Magnifier", "Coin stacks"];
+function rng(seed) { let x = seed >>> 0 || 1; return () => (x = (Math.imul(x, 1664525) + 1013904223) >>> 0) / 4294967296; }
+function artFor(date) { const d = Date.parse((date || new Date().toISOString().slice(0, 10)) + "T00:00:00Z") / 864e5; return ART || ((Math.floor(d) % 12) + 12) % 12 + 1; }
+function bannerArt(s, fit = "xMaxYMid slice", art = artFor(s && s.asof)) {
+  const R = rng(7), id = "a" + (++ART_N), f1 = v => v.toFixed(1);
+  let vals = s && s.motif && s.motif.length > 8 ? s.motif.slice(-42) : null;
+  if (!vals) { vals = []; let v = 100; for (let i = 0; i < 42; i++) { v *= 1 + (R() - .44) * .018; vals.push(v); } }
+  const lo0 = Math.min(...vals), hi0 = Math.max(...vals), rg = hi0 - lo0 || 1;
+  const rows = (s && s.markets && s.markets.length ? s.markets.slice(0, 5).map(m => [m.t, m.last, m.d1])
+    : [["SPY", 671.2, .6], ["TLT", 89.4, -.3], ["GLD", 372.8, .9], ["UUP", 27.1, -.2], ["USO", 72.5, 1.1]]);
+  const serif = `font-family="Georgia,'Times New Roman',serif"`, mono = `font-family="ui-monospace,Menlo,Consolas,monospace"`;
+  const g = (tx, ty, rot, sc, body) => `<g transform="translate(${tx} ${ty}) rotate(${rot}) scale(${sc})">${body}</g>`;
+  const shadow = (w, h, rx = 0) => `<rect x="6" y="8" width="${w}" height="${h}" rx="${rx}" class="kf" opacity=".14"/>`;
+
+  // candlesticks over [x0, x1] x [y0, y1], optional volume and moving average
+  function candles(x0, x1, y0, y1, o = {}) {
+    const v = o.n ? vals.slice(-o.n) : vals, n = v.length, step = (x1 - x0) / n, w = step * .56;
+    const lo = Math.min(...v), hi = Math.max(...v), r = hi - lo || 1, Y = q => y0 + (1 - (q - lo + r * .12) / (r * 1.24)) * (y1 - y0);
+    let out = "", vol = "", ma = [];
+    v.forEach((c, i) => {
+      const op = i ? v[i - 1] : c * .997, up = c >= op, x = x0 + i * step + step / 2, wig = Math.abs(c - op) * .4 + r * .025 * R();
+      const yb = Y(Math.max(op, c)), h = Math.max(1.5, Y(Math.min(op, c)) - yb);
+      out += `<g class="${up ? "cu" : "cd"}"><line x1="${f1(x)}" x2="${f1(x)}" y1="${f1(Y(Math.max(op, c) + wig))}" y2="${f1(Y(Math.min(op, c) - wig * .8))}" stroke-width="${o.sw || 1.2}"/><rect x="${f1(x - w / 2)}" y="${f1(yb)}" width="${f1(w)}" height="${f1(h)}" fill-opacity="${up ? .3 : .6}" stroke-width="1"/></g>`;
+      if (o.vol) { const vh = 5 + R() * o.vol; vol += `<rect class="${up ? "cu" : "cd"}" x="${f1(x - w / 2)}" y="${f1(y1 + 34 - vh)}" width="${f1(w)}" height="${f1(vh)}" opacity=".3" stroke="none"/>`; }
+      const win = v.slice(Math.max(0, i - 7), i + 1); ma.push(f1(x) + "," + f1(Y(win.reduce((a, b) => a + b, 0) / win.length)));
+    });
+    return `<g opacity="${o.op ?? 1}">${vol}${out}${o.ma === false ? "" : `<polyline points="${ma.join(" ")}" class="k" stroke-width="1.6" opacity=".7" stroke-linejoin="round"/>`}</g>`;
+  }
+  const grid = (x0, op = .12) => { let d = ""; for (let y = 50; y <= 290; y += 48) d += `M${x0} ${y}H1200`; for (let x = x0 + 60; x < 1200; x += 120) d += `M${x} 20V298`; return `<path d="${d}" class="k" stroke-width=".6" opacity="${op}"/>`; };
+  const line = (x0, x1, y0, y1, v = vals) => { const lo = Math.min(...v), r = (Math.max(...v) - lo) || 1; return v.map((q, i) => f1(x0 + i / (v.length - 1) * (x1 - x0)) + "," + f1(y1 - (q - lo) / r * (y1 - y0))).join(" "); };
+
+  // objects
+  function paper() {
+    let txt = "";
+    const col = (cx, y0, y1, w) => { for (let y = y0; y <= y1; y += 6.4) { const ww = R() < .14 ? w * (.3 + R() * .4) : w * (.88 + R() * .12); txt += `M${cx} ${f1(y)}h${f1(ww)}`; } };
+    col(12, 160, 254, 62); col(86, 108, 254, 62); col(160, 184, 254, 62); col(234, 184, 254, 62);
+    return `${shadow(310, 264)}<rect width="310" height="264" class="pp k" stroke-width="1"/>
+      <text x="155" y="33" text-anchor="middle" class="kf" ${serif} font-size="25" font-weight="700" letter-spacing=".5">The Market Pulse</text>
+      <path d="M10 41H300M10 44.5H300M10 59H300" class="k" stroke-width=".8"/>
+      <g class="kf" ${serif} font-size="6" letter-spacing="1"><text x="12" y="53.5">LONDON · NEW YORK · TOKYO</text><text x="155" y="53.5" text-anchor="middle">DAILY EDITION</text><text x="298" y="53.5" text-anchor="end">MARKETS · RATES · FX</text></g>
+      <text x="12" y="81" class="kf" ${serif} font-size="17" font-weight="700">Markets Weigh the Rate Path</text>
+      <path d="M12 91h228M12 97h170" class="k" stroke-width="2.4" opacity=".55"/><path d="M10 103H300" class="k" stroke-width=".6"/>
+      <rect x="12" y="108" width="62" height="44" class="k" stroke-width=".8"/><rect x="12" y="108" width="62" height="44" fill="url(#h${id})"/>
+      <rect x="160" y="108" width="136" height="60" class="k" stroke-width=".8"/>
+      <path d="M166 124H290M166 140H290M166 156H290" class="k" stroke-width=".4" opacity=".5"/>
+      <polyline points="${line(166, 290, 116, 160, vals.slice(-24))}" class="k" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M160 175h110" class="k" stroke-width="1.6" opacity=".5"/>
+      <path d="M80 106V256M154 106V256M228 172V256" class="k" stroke-width=".5" opacity=".6"/>
+      <path d="${txt}" class="k" stroke-width="1.7" opacity=".45"/>`;
+  }
+  let wave = "", wave2 = "", rays = "";
+  for (let x = 14; x <= 222; x += 2) { wave += (x === 14 ? "M" : "L") + x + " " + f1(17 + 2.4 * Math.sin(x / 4.2)); wave2 += (x === 14 ? "M" : "L") + x + " " + f1(83 + 2.4 * Math.sin(x / 4.2 + 1.6)); }
+  for (let a = 0; a < 360; a += 15) { const r = a * Math.PI / 180; rays += `M${f1(56 + Math.cos(r) * 10)} ${f1(50 + Math.sin(r) * 10)}L${f1(56 + Math.cos(r) * 15)} ${f1(50 + Math.sin(r) * 15)}`; }
+  const note = () => `${shadow(236, 100, 4)}<rect width="236" height="100" rx="4" class="nt k" stroke-width="1.1"/>
+    <rect x="6" y="6" width="224" height="88" rx="3" class="k" stroke-width=".7"/><rect x="10" y="10" width="216" height="80" rx="2" class="k" stroke-width=".5" stroke-dasharray="1.5 2"/>
+    <path d="${wave}${wave2}" class="g" stroke-width=".7"/>
+    <ellipse cx="118" cy="50" rx="27" ry="33" class="k" stroke-width="1"/><ellipse cx="118" cy="50" rx="22" ry="28" class="k" stroke-width=".5"/>
+    <circle cx="118" cy="43" r="9" class="k" stroke-width="1"/><path d="M101 74c3-12 9-17 17-17s14 5 17 17" class="k" stroke-width="1"/>
+    <circle cx="56" cy="50" r="15" class="g" stroke-width="1"/><path d="${rays}" class="g" stroke-width=".7"/>
+    <text x="56" y="55" text-anchor="middle" class="gf" ${serif} font-size="14" font-weight="700">$</text>
+    <g class="kf" ${serif} font-weight="700"><text x="16" y="30" font-size="12">100</text><text x="220" y="86" font-size="12" text-anchor="end">100</text><text x="190" y="58" font-size="22" text-anchor="middle">100</text></g>
+    <text x="118" y="93" text-anchor="middle" class="kf" ${serif} font-size="5.5" letter-spacing="1.3">ONE HUNDRED</text>`;
+  const book = (x, y, w, h) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" class="pp k" stroke-width="1"/>
+    <path d="M${x + 12} ${y}v${h}M${x + w - 12} ${y}v${h}" class="g" stroke-width="1.2"/>
+    <rect x="${f1(x + w / 2 - w * .16)}" y="${f1(y + h / 2 - 1.6)}" width="${f1(w * .32)}" height="3.2" class="gf" opacity=".8"/>`;
+  const books = () => `${book(-6, 64, 196, 26)}${book(8, 40, 176, 24)}${book(-10, 18, 186, 22)}${book(18, 0, 150, 18)}<path d="M190 68v18M187 68v18M184 68v18" class="k" stroke-width=".5" opacity=".6"/>`;
+  const board = () => `${shadow(176, 30 + rows.length * 18, 6)}<rect width="176" height="${30 + rows.length * 18}" rx="6" class="pp k" stroke-width="1"/>
+    <text x="12" y="17" class="kf" font-size="8" font-weight="700" letter-spacing="1.6" ${mono}>MARKETS · CLOSE</text><path d="M10 23H166" class="k" stroke-width=".5"/>
+    ${rows.map((r, i) => { const up = (r[2] ?? 0) >= 0, y = 39 + i * 18; return `<g ${mono} font-size="10.5"><text x="12" y="${y}" class="kf" font-weight="700">${esc(r[0])}</text><text x="104" y="${y}" class="kf" text-anchor="end">${r[1] == null ? "" : esc(fmt(r[1]))}</text><text x="166" y="${y}" class="${r[2] == null ? "kf" : up ? "tu" : "td"}" text-anchor="end">${r[2] == null ? "–" : (up ? "▲ " : "▼ ") + Math.abs(r[2]).toFixed(1) + "%"}</text></g>`; }).join("")}`;
+  const cup = () => `<ellipse cx="0" cy="58" rx="78" ry="15" class="pp k" stroke-width="1"/><ellipse cx="0" cy="56" rx="52" ry="9" class="k" stroke-width=".6"/>
+    <path d="M48 8c30-8 40 26 4 34M49 15c20-5 26 16 2 21" class="k" stroke-width="1.2"/>
+    <path d="M-50 0C-48 34-36 54-18 56H18C36 54 48 34 50 0Z" class="pp k" stroke-width="1.1"/>
+    <path d="M22 10c0 18-4 32-12 42M32 8c0 18-5 30-12 40M41 6c0 16-5 28-11 36" class="k" stroke-width=".6" opacity=".6"/>
+    <ellipse cx="0" cy="0" rx="50" ry="10" class="pp k" stroke-width="1.1"/><ellipse cx="0" cy="1" rx="43" ry="7" class="kf" opacity=".28"/>
+    <path d="M-14-16c-8-10 8-16 0-28s6-18 2-26M2-14c-8-10 8-16 0-28s6-18 2-26M18-16c-8-10 8-16 0-28" class="k" stroke-width="1" opacity=".5" stroke-linecap="round"/>`;
+  const glasses = () => `<circle cx="0" cy="0" r="22" class="pp k" stroke-width="2"/><circle cx="60" cy="0" r="22" class="pp k" stroke-width="2"/>
+    <path d="M22-3c5-6 11-6 16 0" class="k" stroke-width="2"/><path d="M-22-4l-34 14M82-4l30 16" class="k" stroke-width="1.6"/>
+    <path d="M-10-10a14 14 0 0 1 10-6M50-10a14 14 0 0 1 10-6" class="k" stroke-width=".8" opacity=".6"/>`;
+  const pen = () => `<rect x="0" y="-7" width="150" height="14" rx="7" class="pp k" stroke-width="1"/><rect x="104" y="-7" width="6" height="14" class="gf" opacity=".8"/>
+    <path d="M150-6l42 6-42 6Z" class="pp k" stroke-width="1"/><path d="M160 0h28" class="k" stroke-width=".7"/><path d="M8-11h70" class="g" stroke-width="2.2" stroke-linecap="round"/>`;
+  function shelf() {
+    const W = [26, 20, 32, 22, 28, 18, 30, 24], H = [196, 172, 210, 160, 188, 150, 204, 176];
+    let x = 0, out = "";
+    W.forEach((w, i) => { const h = H[i], y = 230 - h;
+      out += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" class="pp k" stroke-width="1"/><path d="M${x} ${y + 14}h${w}M${x} ${y + 18}h${w}M${x} ${230 - 14}h${w}" class="g" stroke-width="1"/><rect x="${x + w / 2 - 2}" y="${y + 40}" width="4" height="${Math.round(h * .32)}" class="gf" opacity=".7"/>`; x += w + 3; });
+    out += `<g transform="translate(${x + 6} 230) rotate(16)"><rect x="0" y="-180" width="26" height="180" rx="2" class="pp k" stroke-width="1"/><path d="M0 -166h26M0 -162h26M0 -14h26" class="g" stroke-width="1"/></g>`;
+    return out + `<path d="M-20 231H${x + 80}" class="k" stroke-width="2.2"/><path d="M-20 237H${x + 80}" class="k" stroke-width=".7"/>`;
+  }
+  function globe(r) {
+    let m = ""; [0, .5, .866].forEach(k => { m += k ? `<ellipse rx="${f1(r * k)}" ry="${r}" class="k" stroke-width=".8"/>` : `<path d="M0 ${-r}V${r}" class="k" stroke-width=".8"/>`; });
+    [-.75, -.4, 0, .4, .75].forEach(k => { const y = r * k, hw = Math.sqrt(r * r - y * y); m += `<path d="M${f1(-hw)} ${f1(y)}H${f1(hw)}" class="k" stroke-width="${k ? .7 : 1.1}"/>`; });
+    const city = (lon, lat, t) => { const x = r * Math.sin(lon) * Math.cos(lat), y = -r * Math.sin(lat); return `<circle cx="${f1(x)}" cy="${f1(y)}" r="3.2" class="gf"/><text x="${f1(x + 6)}" y="${f1(y - 5)}" class="kf" ${mono} font-size="9" font-weight="700">${t}</text>`; };
+    return `<g transform="rotate(-18)"><circle r="${r}" class="pp k" stroke-width="1.4"/>${m}${city(-.95, .71, "NY")}${city(-.1, .9, "LDN")}${city(.95, .62, "TKY")}${city(-.55, -.4, "SAO")}</g>
+      <path d="M${-r - 14} 0A${r + 14} ${r + 14} 0 0 0 ${f1((r + 14) * .5)} ${f1((r + 14) * .866)}" class="g" stroke-width="3"/>
+      <path d="M0 ${r + 14}v26M-46 ${r + 44}h92" class="k" stroke-width="3" stroke-linecap="round"/>`;
+  }
+  function panel(w, h) {
+    const v = vals, pts = line(30, w - 16, 34, h - 30, v);
+    let ticks = ""; for (let i = 0; i <= 4; i++) { const y = 34 + i * (h - 64) / 4; ticks += `M30 ${f1(y)}H${w - 16}`; }
+    return `${shadow(w, h, 4)}<rect width="${w}" height="${h}" rx="4" class="pp k" stroke-width="1"/>
+      <text x="16" y="20" class="kf" ${mono} font-size="9" font-weight="700" letter-spacing="1.4">ACWI · TWO MONTHS</text>
+      <path d="${ticks}" class="k" stroke-width=".5" opacity=".35"/><path d="M30 ${h - 30}H${w - 16}M30 34V${h - 30}" class="k" stroke-width=".9"/>
+      <polygon points="30,${h - 30} ${pts} ${w - 16},${h - 30}" fill="url(#h${id})" opacity=".6"/><polyline points="${pts}" class="k" stroke-width="1.8" stroke-linejoin="round"/>`;
+  }
+  function mag(r) {
+    return `<g transform="rotate(40)"><rect x="${r + 2}" y="-9" width="96" height="18" rx="8" class="pp k" stroke-width="1.2"/><path d="M${r + 20} -9v18M${r + 26} -9v18" class="g" stroke-width="1.4"/></g>
+      <circle r="${r + 8}" class="pp k" stroke-width="2.2"/><circle r="${r}" class="k" stroke-width="1"/>
+      <g clip-path="url(#c${id})">${candles(-r + 6, r - 6, -r * .7, r * .7, {n: 9, ma: false, sw: 2})}</g>
+      <path d="M${-r * .6} ${-r * .55}a${r * .8} ${r * .8} 0 0 1 ${r * .5} ${-r * .25}" class="k" stroke-width="1.6" opacity=".5" stroke-linecap="round"/>`;
+  }
+  function coins() {
+    const v = vals.filter((_, i) => i % 6 === 5).slice(-6), lo = Math.min(...v), r = (Math.max(...v) - lo) || 1;
+    let out = "";
+    v.forEach((q, i) => { const n = 3 + Math.round((q - lo) / r * 11), x = i * 62, base = 250, top = base - n * 9;
+      let edges = ""; for (let k = 1; k < n; k++) edges += `M-24 ${base - k * 9}a24 7 0 0 0 48 0`;
+      out += `<g transform="translate(${x} 0)"><path d="M-24 ${top}V${base}a24 7 0 0 0 48 0V${top}" class="pp k" stroke-width="1"/><path d="${edges}" class="k" stroke-width=".7" opacity=".7"/>
+        <ellipse cy="${top}" rx="24" ry="7" class="nt k" stroke-width="1"/><ellipse cy="${top}" rx="17" ry="4.6" class="g" stroke-width=".8"/></g>`; });
+    const tops = v.map((q, i) => `${i * 62},${f1(250 - (3 + Math.round((q - lo) / r * 11)) * 9 - 22)}`).join(" ");
+    return out + `<polyline points="${tops}" class="k" stroke-width="1.4" stroke-dasharray="4 4"/><path d="M${(v.length - 1) * 62 - 10} ${tops.split(" ").pop().split(",")[1] - 6}l12 4-10 8" class="k" stroke-width="1.4"/>`;
+  }
+  function ribbon() {
+    const tape = rows.map(r => `${r[0]} ${r[1] == null ? "" : fmt(r[1])} ${r[2] == null ? "" : (r[2] >= 0 ? "▲" : "▼") + Math.abs(r[2]).toFixed(1) + "%"}`).join("   ·   ");
+    return `<path id="r${id}" d="M520 250C700 300 760 80 920 120S1100 250 1240 120" fill="none"/>
+      <path d="M520 236C700 286 760 66 920 106S1100 236 1240 106" class="k" stroke-width="1"/><path d="M520 264C700 314 760 94 920 134S1100 264 1240 134" class="k" stroke-width="1"/>
+      <path d="M520 236C700 286 760 66 920 106S1100 236 1240 106V134C1100 264 1060 174 920 134S700 314 520 264Z" class="pp"/>
+      <text class="kf" ${mono} font-size="12.5" font-weight="700" dy="4"><textPath href="#r${id}" startOffset="2%">${esc(tape + "   ·   " + tape)}</textPath></text>`;
+  }
+
+  const S = [
+    () => candles(560, 1192, 40, 250, {op: .45}) + g(770, 34, -5, 1.06, paper()) + g(820, 288, -14, 1, pen()),
+    () => grid(560) + g(700, 40, -7, 1, paper()) + g(1090, 190, 0, 1.05, cup()),
+    () => candles(560, 1192, 40, 250, {op: .4}) + g(800, 120, -14, 1.1, note()) + g(850, 108, -3, 1.1, note()) + g(905, 112, 8, 1.1, note()),
+    () => grid(560) + g(700, 36, -6, 1, paper()) + g(950, 196, 8, 1, note()),
+    () => `<polyline points="${line(560, 1192, 60, 220)}" class="k" stroke-width="1.6" opacity=".5"/>` + g(900, 150, 0, 1.25, books()) + g(985, 124, -8, 1, glasses()),
+    () => candles(560, 1192, 40, 250, {op: .35}) + g(900, 52, 0, .96, shelf()),
+    () => candles(560, 1192, 50, 250, {op: .5, vol: 18}) + g(880, 30, 0, 1.55, board()),
+    () => grid(560, .18) + candles(560, 1192, 36, 240, {vol: 22}) + rows.slice(0, 1).map(r => `<text x="1186" y="30" text-anchor="end" class="kf" ${mono} font-size="13" font-weight="700" opacity=".7">ACWI · DAILY</text>`).join(""),
+    () => candles(560, 1192, 30, 200, {op: .35, ma: false}) + ribbon(),
+    () => `<polyline points="${line(560, 1192, 80, 240)}" class="k" stroke-width="1.6" opacity=".45"/>` + g(1010, 140, 0, 1, globe(108)),
+    () => g(770, 40, -3, 1, panel(350, 226)) + g(1060, 160, 0, 1, mag(66)),
+    () => grid(560) + g(830, 0, 0, 1.08, coins())
+  ];
+  const body = (S[(art - 1 + S.length) % S.length] || S[0])();
+  return `<svg viewBox="0 0 1200 360" preserveAspectRatio="${fit}" aria-hidden="true"><defs>
+    <linearGradient id="f${id}" gradientUnits="userSpaceOnUse" x1="470" x2="760" y1="0" y2="0"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>
+    <mask id="m${id}"><rect width="1200" height="360" fill="url(#f${id})"/></mask><clipPath id="c${id}"><circle r="64"/></clipPath>
+    <pattern id="h${id}" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0V4" class="k" stroke-width="1" opacity=".55"/></pattern></defs>
+    <g class="fade" mask="url(#m${id})"><g class="ros g" transform="translate(640 170)" stroke-width=".5" opacity=".4">${Array.from({length: 24}, (_, i) => `<ellipse rx="150" ry="50" transform="rotate(${i * 7.5})"/>`).join("")}</g>${body}</g></svg>`;
 }
 
 let ITEMS = [], RAW = null, CUR = null;
@@ -366,16 +589,12 @@ function heroHTML(e, s) {
     + (e.files.length && e.files[0].kind === "dashboard" ? '<div class="hint">This page is the summary. The full dashboard has every chart, the indicator monitor, scenarios and all stock and ETF ideas.</div>' : "");
   const st = s ? s.stats : {ideas: e.n_ideas, ru: e.ru};
   const tape = s && s.levels.length ? `<div class="tape">${s.levels.map(l => `<div><span>${esc(l.label)}</span><b class="num">${esc(l.text)}</b></div>`).join("")}<div class="asof">Closing levels as of ${esc(shortDate(s.asof))}</div></div>` : "";
-  return `<section class="hero">${s ? motif(s.motif) : ""}
-    <div class="hero-in"><div>
+  return `<section class="hero"><div class="art">${bannerArt(s, undefined, artFor(e.date))}</div><div class="veil"></div>
+    <div class="hero-in"><div class="hero-tx">
       <div class="eyebrow"><span class="dot${latest ? "" : " old"}"></span>${latest ? "Latest edition" : "Archive edition"}</div>
-      <h1>${esc(e.headline)}</h1><div class="date">${esc(e.date_long)}</div>
-      <div class="ctas">${files}</div></div>
-      <div class="hstats">
-        <div class="hs"><div class="l">Trade ideas</div><div class="v num">${esc(st.ideas ?? "–")}</div></div>
-        <div class="hs"><div class="l">Risk budget</div><div class="v num">${esc(st.ru ?? "–")}<small>RU</small></div></div>
-        <div class="hs"><div class="l">Stock ideas</div><div class="v num">${esc(st.stocks ?? "–")}</div></div>
-        <div class="hs"><div class="l">ETF ideas</div><div class="v num">${esc(st.etfs ?? "–")}</div></div></div></div>
+      <h1>${esc(e.headline)}</h1>
+      <div class="meta num"><span>${esc(e.date_long)}</span><span><b>${esc(st.ideas ?? "–")}</b> trade ideas</span><span><b>${esc(st.ru ?? "–")}</b> RU</span>${st.stocks != null ? `<span><b>${esc(st.stocks)}</b> stocks</span>` : ""}${st.etfs != null ? `<span><b>${esc(st.etfs)}</b> ETFs</span>` : ""}</div>
+      <div class="ctas">${files}</div></div></div>
     ${tape}</section>`;
 }
 
@@ -432,6 +651,14 @@ async function show(raw) {
   document.getElementById("lock").hidden = true; document.getElementById("app").hidden = false;
   document.getElementById("count").textContent = items.length + (items.length === 1 ? " edition" : " editions");
   document.getElementById("theme").onclick = () => { const r = document.documentElement, t = r.dataset.theme === "dark" ? "light" : "dark"; r.dataset.theme = t; try { localStorage.setItem("mr-theme", t); } catch (e) {} };
+  const menu = document.getElementById("lookmenu"), lb = document.getElementById("look");
+  const names = {night: "Night", broadsheet: "Broadsheet", greenback: "Greenback"};
+  const mark = () => { const k = document.documentElement.dataset.look; document.getElementById("lookname").textContent = names[k] || "Style"; menu.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.k === k)); };
+  lb.onclick = ev => { ev.stopPropagation(); menu.hidden = !menu.hidden; lb.setAttribute("aria-expanded", String(!menu.hidden)); };
+  menu.onclick = ev => { const b = ev.target.closest("button"); if (!b) return; document.documentElement.dataset.look = b.dataset.k; try { localStorage.setItem("mr-look", b.dataset.k); } catch (e) {} mark(); menu.hidden = true; };
+  document.addEventListener("click", ev => { if (!menu.hidden && !menu.contains(ev.target)) menu.hidden = true; });
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape") menu.hidden = true; });
+  mark();
   document.getElementById("out").onclick = () => { forget(); location.replace(location.pathname); };
   document.getElementById("menu").onclick = () => toggleSide(true);
   document.getElementById("scrim").onclick = () => toggleSide(false);
@@ -446,6 +673,15 @@ document.getElementById("f").onsubmit = async ev => {
   catch (e) { err.textContent = "That password is not right. Please try again."; return; }
   storeKey(raw); err.textContent = ""; show(raw);
 };
+document.getElementById("lockart").innerHTML = bannerArt(null, "xMaxYMax meet");
+if (PICK) {
+  const bar = document.createElement("div"); bar.className = "artbar";
+  bar.innerHTML = `<button id="ap">‹</button><select id="as">${ART_NAMES.map((n, i) => `<option value="${i + 1}">${i + 1}. ${n}</option>`).join("")}</select><button id="an">›</button>`;
+  document.body.appendChild(bar);
+  const sel = document.getElementById("as"), set = n => { ART = (n + 11) % 12 + 1; sel.value = ART; try { localStorage.setItem("mr-art", ART); } catch (e) {}
+    document.getElementById("lockart").innerHTML = bannerArt(null, "xMaxYMax meet"); if (CUR) { const e = ITEMS.find(x => x.date === CUR); render(e, CACHE[e.date]); } };
+  sel.value = ART; sel.onchange = () => set(+sel.value); document.getElementById("ap").onclick = () => set(ART - 1); document.getElementById("an").onclick = () => set(ART + 1);
+}
 
 const k0 = storedKey(); if (k0) show(k0).catch(() => forget()); else document.getElementById("pw").focus();
 </script></body></html>
