@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow,noarchive,nosnippet"><meta name="referrer" content="no-referrer">
 <title>Market Pulse Research 2026-10-08 · Email version</title>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("mr-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}</script>
 <!-- template: site file page v2.0.0 (slim bar with archive link and format switcher above the decrypted file) -->
 <style>
 :root{--bar:#13294b;--on:#ffffff;--on2:#b9c6da;--line:rgba(255,255,255,.14);--page:#f6f5f1;--ink:#0b0b0b;--muted:#52514e;--acc:#2a78d6;--bh:46px}
@@ -66,7 +67,8 @@ const KIND = "email", NAME = "email.html", HOME = "../", BIN = "2026-10-08-email
       const f = document.createElement("iframe"); f.className = "frame"; f.src = url; f.title = NAME; document.body.appendChild(f);
     }
   } else {
-    const html = new TextDecoder().decode(bytes), f = document.createElement("iframe");
+    const theme = document.documentElement.dataset.theme || "light";
+    const html = new TextDecoder().decode(bytes).replace(/<html(?![^>]*data-theme)/i, `<html data-theme="${theme}"`), f = document.createElement("iframe");
     f.className = "frame"; f.srcdoc = html; f.title = document.title;
     msg.remove(); document.body.appendChild(f);
   }
