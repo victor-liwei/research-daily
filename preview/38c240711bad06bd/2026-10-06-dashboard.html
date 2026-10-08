@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow,noarchive,nosnippet"><meta name="referrer" content="no-referrer">
-<title>Multi-Asset Research 2026-10-06 · Interactive dashboard</title>
+<title>Market Pulse Research 2026-10-06 · Interactive dashboard</title>
 <!-- template: site file page v2.0.0 (slim bar with archive link and format switcher above the decrypted file) -->
 <style>
 :root{--bar:#13294b;--on:#ffffff;--on2:#b9c6da;--line:rgba(255,255,255,.14);--page:#f6f5f1;--ink:#0b0b0b;--muted:#52514e;--acc:#2a78d6;--bh:46px}
@@ -44,9 +44,9 @@ async function decrypt(raw, payload) {
   const buf = typeof payload === "string" ? b64(payload) : new Uint8Array(payload);
   return new Uint8Array(await crypto.subtle.decrypt({name: "AES-GCM", iv: buf.slice(0, 12)}, await keyFrom(raw), buf.slice(12)));
 }
-function storedKey() { try { const k = localStorage.getItem("mas_key_" + SALT); return k ? b64(k) : null; } catch (e) { return null; } }
-function storeKey(raw) { try { localStorage.setItem("mas_key_" + SALT, btoa(String.fromCharCode(...raw))); } catch (e) {} }
-function forget() { try { localStorage.removeItem("mas_key_" + SALT); } catch (e) {} }
+function storedKey() { try { const k = localStorage.getItem("mpr_key_" + SALT); return k ? b64(k) : null; } catch (e) { return null; } }
+function storeKey(raw) { try { localStorage.setItem("mpr_key_" + SALT, btoa(String.fromCharCode(...raw))); } catch (e) {} }
+function forget() { try { localStorage.removeItem("mpr_key_" + SALT); } catch (e) {} }
 
 const KIND = "dashboard", NAME = "dashboard.html", HOME = "../", BIN = "2026-10-06-dashboard.bin", GZ = true;
 (async () => {
