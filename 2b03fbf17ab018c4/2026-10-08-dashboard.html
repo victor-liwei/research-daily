@@ -56,12 +56,12 @@ function forget() { try { localStorage.removeItem("mpr_key_" + SALT); } catch (e
 const KIND = "dashboard", NAME = "dashboard.html", HOME = "../", BIN = "2026-10-08-dashboard.bin", GZ = true;
 (async () => {
   const raw = storedKey();
-  if (!raw) { location.replace(HOME + "?next=" + encodeURIComponent(location.pathname.split("/").slice(-2).join("/"))); return; }
+  if (!raw) { location.replace(HOME.split("#")[0] + "?next=" + encodeURIComponent(location.pathname.split("/").slice(-2).join("/"))); return; }
   let bytes;
   try {
     const res = await fetch(BIN, {cache: "no-cache"});
     bytes = await decrypt(raw, await res.arrayBuffer());
-  } catch (e) { forget(); location.replace(HOME); return; }
+  } catch (e) { forget(); location.replace(HOME.split("#")[0]); return; }
   if (GZ) bytes = new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
   const msg = document.getElementById("msg");
   if (KIND === "pdf") {
