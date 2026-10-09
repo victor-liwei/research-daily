@@ -3,7 +3,7 @@
 <title>Market Pulse Research Dashboard</title>
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("mr-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}
 document.documentElement.dataset.look="broadsheet";try{const l=localStorage.getItem("mr-look");if(/^(night|broadsheet|greenback)$/.test(l))document.documentElement.dataset.look=l}catch(e){}
-const PICK=false;let ART=1;try{if(PICK&&+localStorage.getItem("mr-art"))ART=+localStorage.getItem("mr-art")}catch(e){}</script>
+const PICK=false;let ART=1,ART_S=0;try{if(PICK&&+localStorage.getItem("mr-art"))ART=+localStorage.getItem("mr-art");if(PICK&&+localStorage.getItem("mr-art-s"))ART_S=+localStorage.getItem("mr-art-s")}catch(e){}</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2313294b'/%3E%3Cpath d='M5 16h5l3-8 4 14 3-6h7' stroke='%2386b6ef' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <!-- template: site index v2.0.0 (archive side panel). Palette follows the dashboard template. -->
 <style>
@@ -392,7 +392,7 @@ function storedKey() { try { const k = localStorage.getItem("mpr_key_" + SALT); 
 function storeKey(raw) { try { localStorage.setItem("mpr_key_" + SALT, btoa(String.fromCharCode(...raw))); } catch (e) {} }
 function forget() { try { localStorage.removeItem("mpr_key_" + SALT); } catch (e) {} }
 
-const MANIFEST = "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";
+const MANIFEST = "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";
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const P = d => '<svg class="i" viewBox="0 0 24 24">' + d + '</svg>';
 const IC = {
@@ -447,12 +447,17 @@ let ART_N = 0;
 const ART_NAMES = ["Front page", "Morning paper", "Greenbacks", "Paper and notes", "Library", "Bookshelf",
   "Quote board", "Candlesticks", "Ticker ribbon", "Globe", "Magnifier", "Coin stacks",
   "Journal front page", "Salmon front page", "Two papers", "Chart front page", "Masthead close-up", "Market data page",
-  "Blackletter masthead", "Folded paper", "Paper and glasses", "Data and chart pages", "Paper, pen and coffee ring", "Stack of papers"];
+  "Blackletter masthead", "Folded paper", "Paper and glasses", "Data and chart pages", "Paper, pen and coffee ring", "Stack of papers",
+  "Watchlist board", "Annual report", "Earnings call", "Analyst note", "Income statement", "Share certificate", "Company HQ", "Tear sheet",
+  "Price target chart", "Stock screener funnel", "Revenue by segment", "DCF model", "Ticker tape machine", "Filings shelf", "Factor scorecard"];
 function rng(seed) { let x = seed >>> 0 || 1; return () => (x = (Math.imul(x, 1664525) + 1013904223) >>> 0) / 4294967296; }
 function artFor(date) { const d = Date.parse((date || new Date().toISOString().slice(0, 10)) + "T00:00:00Z") / 864e5; return ART || ((Math.floor(d) % 12) + 12) % 12 + 1; }
+// Single Stocks rotates daily through its chosen scenes (watchlist board, income statement, revenue by segment)
+const ROT_S = [25, 29, 35];
+function artForS(date) { const n = ALL.filter(x => x.cat === "stocks" && x.date < date).length; return ART_S || ROT_S[n % ROT_S.length]; }  // by edition number, so weekends never repeat a scene
 function bannerArt(s, fit = "xMaxYMid slice", art = artFor(s && s.asof)) {
   const R = rng(7), id = "a" + (++ART_N), f1 = v => v.toFixed(1);
-  let vals = s && s.motif && s.motif.length > 8 ? s.motif.slice(-42) : null;
+  let vals = art < 25 && s && s.motif && s.motif.length > 8 ? s.motif.slice(-42) : null;
   if (!vals) { vals = []; let v = 100; for (let i = 0; i < 42; i++) { v *= 1 + (R() - .44) * .018; vals.push(v); } }
   const lo0 = Math.min(...vals), hi0 = Math.max(...vals), rg = hi0 - lo0 || 1;
   const rows = (s && s.markets && s.markets.length ? s.markets.slice(0, 5).map(m => [m.t, m.last, m.d1])
@@ -514,8 +519,8 @@ function bannerArt(s, fit = "xMaxYMid slice", art = artFor(s && s.asof)) {
     <rect x="${f1(x + w / 2 - w * .16)}" y="${f1(y + h / 2 - 1.6)}" width="${f1(w * .32)}" height="3.2" class="gf" opacity=".8"/>`;
   const books = () => `${book(-6, 64, 196, 26)}${book(8, 40, 176, 24)}${book(-10, 18, 186, 22)}${book(18, 0, 150, 18)}<path d="M190 68v18M187 68v18M184 68v18" class="k" stroke-width=".5" opacity=".6"/>`;
   const board = () => boardOf(rows);
-  const boardOf = rows => `${shadow(176, 30 + rows.length * 18, 6)}<rect width="176" height="${30 + rows.length * 18}" rx="6" class="pp k" stroke-width="1"/>
-    <text x="12" y="17" class="kf" font-size="8" font-weight="700" letter-spacing="1.6" ${mono}>MARKETS · CLOSE</text><path d="M10 23H166" class="k" stroke-width=".5"/>
+  const boardOf = (rows, title = "MARKETS · CLOSE") => `${shadow(176, 30 + rows.length * 18, 6)}<rect width="176" height="${30 + rows.length * 18}" rx="6" class="pp k" stroke-width="1"/>
+    <text x="12" y="17" class="kf" font-size="8" font-weight="700" letter-spacing="1.6" ${mono}>${title}</text><path d="M10 23H166" class="k" stroke-width=".5"/>
     ${rows.map((r, i) => { const up = (r[2] ?? 0) >= 0, y = 39 + i * 18; return `<g ${mono} font-size="10.5"><text x="12" y="${y}" class="kf" font-weight="700">${esc(r[0])}</text><text x="104" y="${y}" class="kf" text-anchor="end">${r[1] == null ? "" : esc(fmt(r[1]))}</text><text x="166" y="${y}" class="${r[2] == null ? "kf" : up ? "tu" : "td"}" text-anchor="end">${r[2] == null ? "–" : (up ? "▲ " : "▼ ") + Math.abs(r[2]).toFixed(1) + "%"}</text></g>`; }).join("")}`;
   const cup = () => `<ellipse cx="0" cy="58" rx="78" ry="15" class="pp k" stroke-width="1"/><ellipse cx="0" cy="56" rx="52" ry="9" class="k" stroke-width=".6"/>
     <path d="M48 8c30-8 40 26 4 34M49 15c20-5 26 16 2 21" class="k" stroke-width="1.2"/>
@@ -670,7 +675,244 @@ function bannerArt(s, fit = "xMaxYMid slice", art = artFor(s && s.asof)) {
     () => g(760, 26, -4, 1.12, front({news: true, kind: "photo", span: 2, lh: 70, head: "Long End Blinks After Auction"})) + ring(1080, 90) + g(860, 300, -20, 1, pen()),
     () => g(790, 64, 5, 1.05, `<rect width="300" height="200" class="pp k"/>`) + g(780, 52, 2, 1.05, `<rect width="300" height="210" class="sal k"/>`) + g(760, 30, -4, 1.1, front({style: "ft", sal: true, kind: "chart", hf: F.ft, n: 5, head: "Investors Brace for Inflation Print"}))
   ];
-  const body = (S[(art - 1 + S.length) % S.length] || S[0])();
+  // single-stock scenes (25+): company research objects. Names and numbers are decorative.
+  const SR = [["NVDA", 188.4, 1.8], ["AAPL", 254.1, .6], ["MSFT", 512.3, -.4], ["AMZN", 221.7, 1.2], ["JPM", 301.5, -.7]];
+  const co = "MERIDIAN CORP", tk = "MRDN";
+  const T = (x, y, t, a = "") => `<text x="${x}" y="${y}" ${a}>${t}</text>`;
+  function doc(title, w = 230, h = 290, sub = "") {
+    let d = ""; for (let y = 64; y < h - 14; y += 7) { const k = R(); if (k > .93) { y += 6; continue; } d += `M16 ${y}h${f1(k < .12 ? (w - 32) * (.3 + R() * .4) : w - 32)}`; }
+    return `${shadow(w, h)}<rect width="${w}" height="${h}" class="pp k" stroke-width="1"/>
+      <text x="16" y="30" class="kf" ${F.wsj} font-size="15" font-weight="700" letter-spacing="1">${title}</text>
+      <text x="16" y="44" class="kf" ${mono} font-size="6.5" letter-spacing="1">${sub}</text><path d="M14 50H${w - 14}" class="k" stroke-width=".8"/>
+      <path d="${d}" class="k" stroke-width="1.6" opacity=".4"/>`;
+  }
+  function report() {
+    const H = [34, 46, 55, 70, 92]; let bars = "";
+    H.forEach((h, i) => { const x = 46 + i * 28; bars += `<rect x="${x}" y="${252 - h}" width="18" height="${h}" class="${i === 4 ? "gf" : "pp k"}" ${i === 4 ? 'opacity=".85"' : 'stroke-width="1"'}/>${i < 4 ? `<rect x="${x}" y="${252 - h}" width="18" height="${h}" fill="url(#h${id})" opacity=".7"/>` : ""}<text x="${x + 9}" y="264" text-anchor="middle" class="kf" ${mono} font-size="7">'${21 + i}</text>`; });
+    return `${shadow(220, 290, 3)}<rect width="220" height="290" rx="3" class="pp k" stroke-width="1.2"/><rect x="10" y="10" width="200" height="270" class="k" stroke-width=".6"/>
+      <rect x="0" width="12" height="290" class="kf" opacity=".75"/>
+      <text x="116" y="42" text-anchor="middle" class="kf" ${F.wsj} font-size="11" letter-spacing="3">${co}</text><path d="M60 50h112" class="g" stroke-width="1.2"/>
+      <text x="116" y="96" text-anchor="middle" class="kf" ${F.play} font-size="31" font-weight="700">Annual</text>
+      <text x="116" y="128" text-anchor="middle" class="kf" ${F.play} font-size="31" font-weight="700">Report</text>
+      <text x="116" y="156" text-anchor="middle" class="gf" ${F.wsj} font-size="18" font-weight="700" letter-spacing="4">2025</text>
+      <text x="46" y="178" class="kf" ${mono} font-size="6.5" letter-spacing="1">REVENUE · $BN</text>
+      <path d="M40 252H190" class="k" stroke-width="1"/>${bars}
+      <polyline points="55,206 83,194 111,185 139,170 167,148" class="k" stroke-width="1.4" stroke-dasharray="3 3"/><path d="M160 146l9 1-5 8" class="k" stroke-width="1.4"/>`;
+  }
+  function mic() {
+    let gr = ""; for (let y = -58; y <= 50; y += 7) { const hw = y < -36 ? Math.sqrt(Math.max(0, 34 * 34 - (y + 36) ** 2)) : y > 26 ? Math.sqrt(Math.max(0, 34 * 34 - (y - 26) ** 2)) : 34; if (hw > 6) gr += `M${f1(-hw + 5)} ${y}H${f1(hw - 5)}`; }
+    return `<ellipse cx="0" cy="214" rx="64" ry="13" class="pp k" stroke-width="1.2"/><ellipse cx="0" cy="210" rx="44" ry="7" class="k" stroke-width=".6"/>
+      <path d="M0 96V206" class="k" stroke-width="5" stroke-linecap="round"/><path d="M-6 120h12M-6 160h12" class="g" stroke-width="2"/>
+      <path d="M-48 8V40a48 48 0 0 0 96 0V8" class="k" stroke-width="3.2"/>
+      <rect x="-34" y="-70" width="68" height="130" rx="34" class="pp k" stroke-width="1.5"/><path d="${gr}" class="k" stroke-width=".8" opacity=".75"/>
+      <rect x="-37" y="-7" width="74" height="13" rx="3" class="gf" opacity=".85"/><circle cx="-48" cy="8" r="5" class="pp k" stroke-width="1.2"/><circle cx="48" cy="8" r="5" class="pp k" stroke-width="1.2"/>
+      <path d="M-20-56a30 30 0 0 1 14-8" class="k" stroke-width="1.4" opacity=".5" stroke-linecap="round"/>`;
+  }
+  function transcript() {
+    const sp = [["OPERATOR", 66], ["CHIEF EXECUTIVE OFFICER", 100], ["CHIEF FINANCIAL OFFICER", 170], ["ANALYST, Q&A", 236]];
+    let d = "", lab = "";
+    sp.forEach(([n, y], i) => { lab += T(16, y, n, `class="kf" ${mono} font-size="6.5" font-weight="700" letter-spacing="1"`); const end = i < 3 ? sp[i + 1][1] - 12 : 276; for (let yy = y + 9; yy <= end; yy += 7) d += `M16 ${yy}h${f1(R() < .15 ? 80 + R() * 80 : 226)}`; });
+    return `${shadow(260, 290)}<rect width="260" height="290" class="pp k" stroke-width="1"/>
+      <text x="16" y="28" class="kf" ${F.wsj} font-size="14" font-weight="700">Q3 Earnings Call</text><text x="244" y="28" text-anchor="end" class="kf" ${mono} font-size="7" font-weight="700">${tk}</text>
+      <text x="16" y="42" class="kf" ${mono} font-size="6" letter-spacing="1">TRANSCRIPT · 22 OCTOBER 2026 · 17:00 ET</text><path d="M14 48H246" class="k" stroke-width=".8"/>${lab}<path d="${d}" class="k" stroke-width="1.6" opacity=".4"/>`;
+  }
+  const badge = () => `${shadow(150, 62, 8)}<rect width="150" height="62" rx="8" class="nt k" stroke-width="1.2"/><rect x="5" y="5" width="140" height="52" rx="5" class="k" stroke-width=".5"/>
+    <text x="14" y="25" class="kf" ${mono} font-size="13" font-weight="700">EPS $1.42</text><text x="14" y="42" class="kf" ${mono} font-size="8">vs $1.31 expected</text>
+    <text x="136" y="25" text-anchor="end" class="tu" ${mono} font-size="9" font-weight="700">▲ BEAT</text><text x="136" y="42" text-anchor="end" class="tu" ${mono} font-size="8">+8.4%</text>`;
+  function notepad() {
+    let ru = ""; for (let y = 54; y < 290; y += 14) ru += `M0 ${y}H230`;
+    const hand = `font-family="'Libre Caslon Text',Georgia,serif" font-style="italic"`;
+    return `${shadow(230, 300)}<rect width="230" height="300" class="nt k" stroke-width="1"/><path d="${ru}" class="k" stroke-width=".4" opacity=".35"/><path d="M34 22V300" class="g" stroke-width="1.2"/>
+      <rect width="230" height="22" class="kf" opacity=".8"/>${[30, 70, 110, 150, 190].map(x => `<circle cx="${x}" cy="11" r="3.2" class="pp"/>`).join("")}
+      <g class="kf"><text x="42" y="50" ${mono} font-size="8" font-weight="700" letter-spacing="1.4">INITIATING COVERAGE</text>
+      <text x="42" y="78" ${F.wsj} font-size="14" font-weight="700">${co.replace(" CORP", " Corp")} (${tk})</text>
+      <g ${hand} font-size="11"><text x="42" y="106">Rating: Buy</text><text x="42" y="120">Price target $240 (+28%)</text>
+      <text x="42" y="148">· Margins still expanding</text><text x="42" y="162">· Estimates moving up</text><text x="42" y="176">· Cheap vs. peers, 21x fwd</text>
+      <text x="42" y="204">Risks: supply, FX, capex</text><text x="42" y="232">Catalyst: Q3 print 22 Oct</text></g></g>
+      <path d="M42 124c30 4 70 2 110-2" class="g" stroke-width="1.4"/>`;
+  }
+  const stamp = () => `<g class="cu" style="fill:none" stroke-width="2.6"><circle r="48"/><circle r="40" stroke-width="1"/></g>
+    <text y="10" text-anchor="middle" class="tu" ${F.wsj} font-size="30" font-weight="700" letter-spacing="2">BUY</text>
+    <text y="-20" text-anchor="middle" class="tu" ${mono} font-size="7" font-weight="700" letter-spacing="1.6">★ RATING ★</text><text y="28" text-anchor="middle" class="tu" ${mono} font-size="7" font-weight="700" letter-spacing="1.6">PT $240</text>`;
+  function statement() {
+    const L = [["Revenue", "41,200", "48,900", "57,300"], ["Cost of sales", "(18,100)", "(20,800)", "(23,500)"], ["Gross profit", "23,100", "28,100", "33,800", 1],
+      ["Operating expenses", "(11,900)", "(13,400)", "(15,100)"], ["Operating income", "11,200", "14,700", "18,700", 1], ["Net income", "8,700", "10,400", "12,600", 1], ["Diluted EPS ($)", "3.12", "3.71", "4.46", 2]];
+    let out = "";
+    L.forEach((r, i) => { const y = 82 + i * 22, b = r[4] ? 'font-weight="700"' : "";
+      out += `<g class="kf" ${mono} font-size="8.5" ${b}>${T(16, y, r[0])}${T(196, y, r[1], 'text-anchor="end"')}${T(256, y, r[2], 'text-anchor="end"')}${T(316, y, r[3], 'text-anchor="end"')}</g><path d="M14 ${y + 7}H322" class="k" stroke-width="${r[4] === 1 ? .8 : .3}" opacity="${r[4] === 1 ? .8 : .45}"/>`;
+      if (r[4] === 2) out += `<path d="M14 ${y + 10}H322" class="g" stroke-width="1.6"/>`; });
+    return `${shadow(336, 250)}<rect width="336" height="250" class="pp k" stroke-width="1"/>
+      <text x="16" y="30" class="kf" ${F.wsj} font-size="15" font-weight="700">Income Statement</text><text x="320" y="30" text-anchor="end" class="kf" ${mono} font-size="7" font-weight="700">${tk}</text>
+      <text x="16" y="44" class="kf" ${mono} font-size="6.5" letter-spacing="1">USD MILLIONS · FISCAL YEAR</text><path d="M14 50H322" class="k" stroke-width="1"/>
+      <g class="kf" ${mono} font-size="7.5" font-weight="700">${T(196, 64, "2023", 'text-anchor="end"')}${T(256, 64, "2024", 'text-anchor="end"')}${T(316, 64, "2025", 'text-anchor="end"')}</g>${out}
+      <path d="M16 ${82 + 7 * 22 + 4}h120M16 ${82 + 7 * 22 + 12}h170M16 ${82 + 7 * 22 + 20}h90" class="k" stroke-width="1.5" opacity=".35"/>`;
+  }
+  const lens = (r, t) => `<g transform="rotate(40)"><rect x="${r + 4}" y="-9" width="100" height="18" rx="8" class="pp k" stroke-width="1.2"/><path d="M${r + 22} -9v18M${r + 28} -9v18" class="g" stroke-width="1.4"/></g>
+    <circle r="${r}" class="pp" opacity=".9"/><text y="7" text-anchor="middle" class="kf" ${mono} font-size="21" font-weight="700">${t}</text><path d="M${-r + 10} 16H${r - 10}" class="g" stroke-width="2.4"/>
+    <circle r="${r + 7}" class="k" stroke-width="2.2" fill="none"/><circle r="${r}" class="k" stroke-width="1"/>
+    <path d="M${-r * .62} ${-r * .5}a${r * .8} ${r * .8} 0 0 1 ${r * .5} ${-r * .26}" class="k" stroke-width="1.6" opacity=".45" stroke-linecap="round"/>`;
+  function cert() {
+    let gu = ""; for (const [y0, ph] of [[14, 0], [196, 1.6]]) { let p = ""; for (let x = 14; x <= 316; x += 2) p += (x === 14 ? "M" : "L") + x + " " + f1(y0 + 3 * Math.sin(x / 4 + ph)); gu += p; }
+    for (const [x0, ph] of [[14, 0], [316, 1.6]]) { let p = ""; for (let y = 14; y <= 196; y += 2) p += (y === 14 ? "M" : "L") + f1(x0 + 3 * Math.sin(y / 4 + ph)) + " " + y; gu += p; }
+    let sr = ""; for (let a = 0; a < 360; a += 12) { const q = a * Math.PI / 180; sr += `M${f1(270 + Math.cos(q) * 20)} ${f1(160 + Math.sin(q) * 20)}L${f1(270 + Math.cos(q) * 27)} ${f1(160 + Math.sin(q) * 27)}`; }
+    return `${shadow(330, 210, 3)}<rect width="330" height="210" rx="3" class="nt k" stroke-width="1.2"/><rect x="7" y="7" width="316" height="196" class="k" stroke-width=".8"/>
+      <path d="${gu}" class="g" stroke-width=".8"/><rect x="22" y="22" width="286" height="166" class="k" stroke-width=".6"/>
+      ${[[22, 22], [308, 22], [22, 188], [308, 188]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="7" class="nt k" stroke-width=".8"/><circle cx="${x}" cy="${y}" r="3.4" class="g" stroke-width=".8"/>`).join("")}
+      <rect x="34" y="70" width="52" height="16" class="k" stroke-width=".7"/><text x="60" y="81" text-anchor="middle" class="kf" ${mono} font-size="7" font-weight="700">No. 0001</text>
+      <rect x="244" y="70" width="52" height="16" class="k" stroke-width=".7"/><text x="270" y="81" text-anchor="middle" class="kf" ${mono} font-size="7" font-weight="700">100 SHS</text>
+      <text x="165" y="48" text-anchor="middle" class="kf" ${F.wsj} font-size="13" font-weight="700" letter-spacing="1.2">${co.replace("CORP", "CORPORATION")}</text>
+      <text x="165" y="59" text-anchor="middle" class="kf" ${F.wsj} font-size="4.6" letter-spacing="1">INCORPORATED UNDER THE LAWS OF THE STATE OF DELAWARE</text>
+      <ellipse cx="165" cy="96" rx="34" ry="24" class="k" stroke-width="1"/><ellipse cx="165" cy="96" rx="29" ry="20" class="k" stroke-width=".5"/>
+      <path d="M140 108l12-14 8 6 10-16 10 12 8-6" class="k" stroke-width="1"/><circle cx="178" cy="84" r="4" class="g" stroke-width="1"/>
+      <text x="165" y="134" text-anchor="middle" class="kf" ${F.wsj} font-size="6.5" letter-spacing="1.2">THIS CERTIFIES THAT THE BEARER IS THE OWNER OF</text>
+      <text x="165" y="152" text-anchor="middle" class="kf" ${F.play} font-size="13" font-weight="700" letter-spacing="1">One Hundred Shares</text>
+      <text x="165" y="164" text-anchor="middle" class="kf" ${F.wsj} font-size="5.6" letter-spacing="1.2">OF THE COMMON STOCK, FULLY PAID</text>
+      <path d="M44 176c8-8 14 4 22-4s10 2 18-2M116 176h-74" class="k" stroke-width=".8"/><circle cx="270" cy="160" r="18" class="gf" opacity=".8"/><path d="${sr}" class="g" stroke-width="1"/>
+      <text x="270" y="163" text-anchor="middle" class="pp" ${F.wsj} font-size="6" font-weight="700" letter-spacing=".6">SEAL</text>`;
+  }
+  function tower() {
+    let win = ""; for (let x = 12; x < 120; x += 12) win += `M${x} 48V256`; for (let y = 58; y < 256; y += 10) win += `M2 ${y}H118`;
+    let w2 = ""; for (let y = 160; y < 296; y += 12) w2 += `M124 ${y}H206M-66 ${y + 40 > 296 ? 296 : y + 40}H-4`; for (let x = 132; x < 206; x += 14) w2 += `M${x} 156V296`; for (let x = -60; x < -4; x += 12) w2 += `M${x} 196V296`;
+    return `<rect x="-70" y="190" width="70" height="110" class="pp k" stroke-width="1"/><rect x="120" y="150" width="90" height="150" class="pp k" stroke-width="1"/>
+      <path d="${w2}" class="k" stroke-width=".5" opacity=".5"/>
+      <rect x="0" y="40" width="120" height="260" class="pp k" stroke-width="1.3"/><path d="${win}" class="k" stroke-width=".5" opacity=".55"/>
+      <rect x="15" y="10" width="90" height="30" class="pp k" stroke-width="1.2"/><rect x="35" y="-10" width="50" height="20" class="pp k" stroke-width="1.2"/>
+      <path d="M60-10V-56" class="k" stroke-width="2"/><path d="M60-56l26 7-26 7Z" class="gf"/>
+      <path d="M22 24h76M22 30h76" class="k" stroke-width=".6" opacity=".6"/>
+      <rect x="10" y="262" width="100" height="10" class="kf" opacity=".85"/><text x="60" y="270" text-anchor="middle" class="pp" ${mono} font-size="7" font-weight="700" letter-spacing="2">${co}</text>
+      <rect x="42" y="276" width="36" height="24" class="kf" opacity=".5"/><path d="M60 276V300" class="k" stroke-width=".6" opacity=".4"/>
+      <path d="M-130 300H330" class="k" stroke-width="2.2"/><path d="M-130 306H330" class="k" stroke-width=".7"/>`;
+  }
+  function tear() {
+    const v = vals.slice(-30), pts = line(16, 196, 58, 124, v);
+    const st = [["MKT CAP", "$412B"], ["P/E FWD", "24.1x"], ["EPS NTM", "$7.78"], ["DIV YIELD", "0.8%"], ["BETA", "1.12"], ["SHORT INT.", "1.9%"]];
+    return `${shadow(320, 264)}<rect width="320" height="264" class="pp k" stroke-width="1"/><rect width="320" height="34" class="kf" opacity=".88"/>
+      <text x="14" y="23" class="pp" ${mono} font-size="16" font-weight="700" letter-spacing="1">${tk}</text><text x="76" y="22" class="pp" ${F.wsj} font-size="8" letter-spacing="1">${co} · NASDAQ</text>
+      <text x="306" y="22" text-anchor="end" class="pp" ${mono} font-size="10" font-weight="700">$187.42 ▲2.1%</text>
+      <rect x="12" y="44" width="190" height="88" class="k" stroke-width=".7"/><path d="M16 66H198M16 88H198M16 110H198" class="k" stroke-width=".3" opacity=".6"/>
+      <polygon points="16,128 ${pts} 196,128" fill="url(#h${id})" opacity=".5"/><polyline points="${pts}" class="k" stroke-width="1.5" stroke-linejoin="round"/>
+      ${st.map((s, i) => { const x = 12 + (i % 2) * 97, y = 152 + Math.floor(i / 2) * 26; return `<text x="${x}" y="${y}" class="kf" ${mono} font-size="6" letter-spacing="1">${s[0]}</text><text x="${x}" y="${y + 12}" class="kf" ${mono} font-size="10" font-weight="700">${s[1]}</text>`; }).join("")}
+      <text x="12" y="238" class="kf" ${mono} font-size="6" letter-spacing="1">52-WEEK RANGE</text><path d="M12 250H200" class="k" stroke-width="2.4" opacity=".3"/><path d="M12 250H164" class="k" stroke-width="2.4"/><circle cx="164" cy="250" r="4" class="gf"/>
+      <path d="M214 44V250" class="k" stroke-width=".5" opacity=".6"/>${hedcut(266, 82, 24)}<text x="266" y="128" text-anchor="middle" class="kf" ${mono} font-size="6" letter-spacing="1">CHIEF EXECUTIVE</text>
+      <text x="224" y="156" class="kf" ${mono} font-size="6" letter-spacing="1">ANALYSTS (32)</text>
+      ${[["BUY", 24], ["HOLD", 7], ["SELL", 1]].map(([n, c], i) => `<text x="224" y="${174 + i * 18}" class="kf" ${mono} font-size="6.5" font-weight="700">${n}</text><rect x="252" y="${168 + i * 18}" width="${c * 2.3}" height="7" class="${i ? "kf" : "gf"}" opacity="${i ? .45 : .9}"/><text x="${256 + c * 2.3}" y="${174 + i * 18}" class="kf" ${mono} font-size="6.5">${c}</text>`).join("")}
+      <text x="224" y="238" class="kf" ${mono} font-size="6" letter-spacing="1">PRICE TARGET</text><text x="224" y="252" class="kf" ${mono} font-size="10" font-weight="700">$240</text>`;
+  }
+  function ptChart() {
+    const lo = Math.min(...vals), hi = Math.max(...vals), r = hi - lo || 1, Y = q => 84 + (1 - (q - lo + r * .12) / (r * 1.24)) * 136;
+    let e = ""; [9, 22, 35].forEach(i => { const x = 600 + (i + .5) * 500 / 42; e += `<circle cx="${f1(x)}" cy="276" r="8" class="pp k" stroke-width="1.2"/><text x="${f1(x)}" y="279.5" text-anchor="middle" class="kf" ${mono} font-size="9" font-weight="700">E</text><path d="M${f1(x)} 267V${f1(Y(vals[i]) + 14)}" class="k" stroke-width=".6" stroke-dasharray="2 3" opacity=".6"/>`; });
+    return `<rect x="600" y="36" width="560" height="44" fill="url(#h${id})" opacity=".35"/><path d="M600 36H1160M600 80H1160" class="k" stroke-width=".5" opacity=".5"/>
+      <path d="M600 56H1160" class="g" stroke-width="2" stroke-dasharray="8 5"/>
+      <rect x="1060" y="45" width="84" height="22" rx="11" class="pp k" stroke-width="1.2"/><text x="1102" y="60" text-anchor="middle" class="kf" ${mono} font-size="10" font-weight="700">PT $240</text>
+      <text x="610" y="30" class="kf" ${mono} font-size="9" letter-spacing="1" opacity=".75">STREET RANGE $190 – $275</text>
+      <text x="1160" y="30" text-anchor="end" class="kf" ${mono} font-size="11" font-weight="700" opacity=".75">${tk} · DAILY</text>
+      ${candles(600, 1100, 84, 220, {vol: 14})}${e}`;
+  }
+  function funnel() {
+    const r = rng(21); let dots = "";
+    for (let i = 0; i < 230; i++) { const x = 600 + Math.pow(r(), .7) * 300, spread = 140 - (x - 600) * .18, y = 180 + (r() * 2 - 1) * spread; dots += `<circle cx="${f1(x)}" cy="${f1(y)}" r="${r() < .5 ? 1.6 : 2.4}" class="${r() < .08 ? "gf" : "kf"}" opacity="${f1(.25 + r() * .45)}"/>`; }
+    let rib = ""; for (let k = 1; k < 6; k++) { const x = 910 + k * 16; rib += `M${x} ${f1(56 + k * 16 * .92)}V${f1(304 - k * 16 * .92)}`; }
+    const picks = ["NVDA", "LLY", "JPM", "AVGO", "COST", "UBER", "CAT", "NFLX", "ANET", "TJX"];
+    return `${dots}<path d="M910 56L1010 148V212L910 304Z" class="pp k" stroke-width="1.4"/><path d="${rib}" class="k" stroke-width=".6" opacity=".55"/>
+      <path d="M1010 162H1040V198H1010" class="pp k" stroke-width="1.4"/><path d="M1016 180h20" class="g" stroke-width="2"/>
+      <g class="kf" ${mono} font-size="9" font-weight="700" letter-spacing="1.4" opacity=".8">${T(760, 30, "1,500+ NAMES", 'text-anchor="middle"')}${T(960, 40, "6 PILLARS", 'text-anchor="middle"')}${T(1112, 30, "10 PICKS", 'text-anchor="middle"')}</g>
+      ${picks.map((p, i) => { const y = 42 + i * 26; return `<rect x="1066" y="${y}" width="92" height="19" rx="9.5" class="pp k" stroke-width="1"/><text x="1080" y="${y + 13}" class="kf" ${mono} font-size="9.5" font-weight="700">${p}</text><text x="1146" y="${y + 13}" text-anchor="end" class="tu" ${mono} font-size="8">▲</text>`; }).join("")}
+      <path d="M1040 180C1052 180 1052 ${42 + 9}1066 51M1040 180H1066M1040 180C1052 180 1052 ${42 + 9 * 26 + 9} 1066 ${42 + 9 * 26 + 9}" class="k" stroke-width=".8" opacity=".5"/>`;
+  }
+  function segPage() {
+    const seg = [["Cloud", .42, "kf", .8], ["Devices", .27, "h", 1], ["Services", .18, "gf", .85], ["Other", .13, "pp", 1]];
+    const cx = 92, cy = 150, R1 = 62, R0 = 34; let a = -Math.PI / 2, sl = "", lg = "";
+    seg.forEach(([n, p, c, op], i) => { const b = a + p * 2 * Math.PI, L = p > .5 ? 1 : 0, P = (r, t) => f1(cx + r * Math.cos(t)) + " " + f1(cy + r * Math.sin(t));
+      const d = `M${P(R1, a)}A${R1} ${R1} 0 ${L} 1 ${P(R1, b)}L${P(R0, b)}A${R0} ${R0} 0 ${L} 0 ${P(R0, a)}Z`;
+      sl += `<path d="${d}" ${c === "h" ? `fill="url(#h${id})"` : `class="${c}"`} opacity="${op}"/><path d="${d}" class="k" stroke-width="1"/>`;
+      const y = 104 + i * 24; lg += `<rect x="178" y="${y - 8}" width="10" height="10" ${c === "h" ? `fill="url(#h${id})"` : `class="${c}"`}/><rect x="178" y="${y - 8}" width="10" height="10" class="k" stroke-width=".7"/><text x="194" y="${y}" class="kf" ${mono} font-size="8.5">${n}</text><text x="292" y="${y}" text-anchor="end" class="kf" ${mono} font-size="8.5" font-weight="700">${Math.round(p * 100)}%</text>`; a = b; });
+    const M = [21, 23, 26, 28, 31]; let mb = ""; M.forEach((m, i) => mb += `<rect x="${186 + i * 22}" y="${f1(262 - m * 1.6)}" width="14" height="${f1(m * 1.6)}" class="${i === 4 ? "gf" : "kf"}" opacity="${i === 4 ? .9 : .4}"/>`);
+    return `${shadow(310, 280)}<rect width="310" height="280" class="pp k" stroke-width="1"/>
+      <text x="16" y="30" class="kf" ${F.wsj} font-size="15" font-weight="700">Revenue by Segment</text><text x="294" y="30" text-anchor="end" class="kf" ${mono} font-size="7" font-weight="700">${tk} · FY25</text>
+      <path d="M14 40H296" class="k" stroke-width=".9"/>${sl}<text x="${cx}" y="${cy - 2}" text-anchor="middle" class="kf" ${mono} font-size="11" font-weight="700">$57B</text><text x="${cx}" y="${cy + 10}" text-anchor="middle" class="kf" ${mono} font-size="6" letter-spacing="1">REVENUE</text>
+      ${lg}<text x="178" y="200" class="kf" ${mono} font-size="6.5" letter-spacing="1">OPERATING MARGIN %</text><path d="M180 262H300" class="k" stroke-width=".8"/>${mb}
+      <path d="M16 236h130M16 244h150M16 252h110M16 260h140" class="k" stroke-width="1.5" opacity=".35"/>`;
+  }
+  function sheet() {
+    const C = ["2026E", "2027E", "2028E", "2029E", "2030E"], Rw = [["Revenue", 64, 71, 78, 85, 92], ["EBITDA", 25, 28, 32, 35, 38], ["Capex", -7, -8, -8, -9, -9], ["Free cash flow", 15, 17, 20, 22, 24], ["Discount factor", .92, .85, .78, .72, .66], ["PV of FCF", 13.8, 14.5, 15.6, 15.8, 15.8]];
+    let g2 = "", tx = "";
+    for (let i = 0; i <= 7; i++) g2 += `M10 ${54 + i * 20}H330`; g2 += "M110 54V194"; for (let j = 0; j < 5; j++) g2 += `M${110 + (j + 1) * 44} 54V194`;
+    C.forEach((c, j) => tx += T(110 + j * 44 + 40, 68, c, 'text-anchor="end" font-weight="700"'));
+    Rw.forEach((r, i) => { const y = 88 + i * 20; tx += T(16, y, r[0], i === 3 ? 'font-weight="700"' : ""); r.slice(1).forEach((v, j) => tx += T(110 + j * 44 + 40, y, Math.abs(v) < 1 ? v.toFixed(2) : v < 0 ? `(${-v})` : String(v), 'text-anchor="end"')); });
+    return `${shadow(340, 250, 3)}<rect width="340" height="250" rx="3" class="pp k" stroke-width="1"/><rect width="340" height="24" rx="3" class="kf" opacity=".85"/>
+      <text x="12" y="16" class="pp" ${mono} font-size="8.5" font-weight="700" letter-spacing="1.2">DCF MODEL · ${tk}</text><text x="328" y="16" text-anchor="end" class="pp" ${mono} font-size="7.5">USD BN</text>
+      <rect x="10" y="34" width="320" height="14" class="k" stroke-width=".6"/><text x="16" y="44" class="kf" ${mono} font-size="7" font-style="italic">fx  =NPV(WACC, FCF) + TV / (1+WACC)^5</text>
+      <rect x="10" y="54" width="320" height="20" class="kf" opacity=".08"/><path d="${g2}" class="k" stroke-width=".5" opacity=".6"/>
+      <g class="kf" ${mono} font-size="8">${tx}</g>
+      <text x="16" y="214" class="kf" ${mono} font-size="8.5" font-weight="700">Fair value per share</text><rect x="242" y="200" width="88" height="22" class="gf" opacity=".3"/><rect x="242" y="200" width="88" height="22" class="g" stroke-width="2"/>
+      <text x="324" y="215" text-anchor="end" class="kf" ${mono} font-size="11" font-weight="700">$238.40</text>
+      <path d="M10 232H330" class="k" stroke-width=".6"/><g class="kf" ${mono} font-size="7"><text x="16" y="244" font-weight="700">Model</text><text x="58" y="244" opacity=".6">Comps</text><text x="100" y="244" opacity=".6">Notes</text></g><path d="M12 247h30" class="g" stroke-width="2"/>`;
+  }
+  function calc() {
+    let b = ""; for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) b += `<rect x="${12 + c * 23}" y="${62 + r * 23}" width="18" height="18" rx="4" class="${c === 3 ? "nt" : "pp"} k" stroke-width=".9"/>`;
+    return `${shadow(110, 160, 10)}<rect width="110" height="160" rx="10" class="pp k" stroke-width="1.3"/><rect x="10" y="12" width="90" height="38" rx="4" class="kf" opacity=".85"/>
+      <text x="94" y="38" text-anchor="end" class="pp" ${mono} font-size="15" font-weight="700">238.40</text>${b}`;
+  }
+  function machine() {
+    let sp = ""; for (let a = 0; a < 360; a += 30) { const q = a * Math.PI / 180; sp += `M0 8L${f1(Math.cos(q) * 24)} ${f1(8 + Math.sin(q) * 24)}`; }
+    return `<rect x="-86" y="104" width="172" height="14" rx="3" class="pp k" stroke-width="1.2"/><path d="M-76 118v10M76 118v10" class="k" stroke-width="3"/>
+      <rect x="-70" y="60" width="140" height="44" class="pp k" stroke-width="1.2"/><path d="M-70 70H70M-70 94H70" class="g" stroke-width="1"/>
+      <circle cx="0" cy="8" r="26" class="k" stroke-width="1.6"/><circle cx="0" cy="8" r="5" class="gf"/><path d="${sp}" class="k" stroke-width=".8"/>
+      <rect x="20" y="30" width="44" height="12" rx="2" class="pp k" stroke-width="1"/><path d="M-40 60V30h20M40 60V42" class="k" stroke-width="1.6"/><circle cx="-40" cy="28" r="6" class="pp k" stroke-width="1"/>
+      <path d="M-62 60V-6A62 74 0 0 1 62-6V60" class="k" stroke-width="1.6"/><path d="M-62 60V-6A62 74 0 0 1 62-6V60Z" class="pp" opacity=".22"/>
+      <path d="M-44-30a52 60 0 0 1 30-34" class="k" stroke-width="2" opacity=".35" stroke-linecap="round"/><circle cx="0" cy="-82" r="7" class="pp k" stroke-width="1.2"/>
+      <ellipse cx="0" cy="60" rx="70" ry="8" class="k" stroke-width="1"/>`;
+  }
+  function tape() {
+    const t = [[tk, 187.42, 2.1], ...SR, ["LLY", 802.6, 1.4], ["COST", 941.2, -.3]].map(r => `${r[0]} ${fmt(r[1])} ${r[2] >= 0 ? "▲" : "▼"}${Math.abs(r[2]).toFixed(1)}`).join("  ·  ");
+    const P = (dy) => `M884 ${206 + dy}C960 ${176 + dy} 1000 ${110 + dy} 1060 ${140 + dy}S1110 ${300 + dy} 1240 ${244 + dy}`;
+    return `<path id="r${id}" d="${P(0)}" fill="none"/><path d="${P(-10)}V${254}C1110 310 1120 150 1060 150S960 186 884 216Z" class="pp"/>
+      <path d="${P(-10)}" class="k" stroke-width="1"/><path d="${P(10)}" class="k" stroke-width="1"/>
+      <text class="kf" ${mono} font-size="11" font-weight="700" dy="4"><textPath href="#r${id}" startOffset="1%">${esc(t + "  ·  " + t)}</textPath></text>`;
+  }
+  function shelf2() {
+    const B = [["10-K", 2025, 32, 210], ["10-Q", "Q2", 26, 184], ["10-Q", "Q1", 26, 184], ["8-K", "", 22, 168], ["PROXY", 2025, 34, 200], ["10-K", 2024, 32, 210], ["S-1", "", 24, 176], ["NOTES", "", 30, 194]];
+    let x = 0, out = "";
+    B.forEach(([n, y2, w, h]) => { const y = 230 - h;
+      out += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" class="pp k" stroke-width="1"/><path d="M${x} ${y + 12}h${w}M${x} ${230 - 12}h${w}" class="g" stroke-width="1"/>
+        <rect x="${x + 3}" y="${y + 26}" width="${w - 6}" height="${y2 ? 30 : 20}" rx="1.5" class="nt k" stroke-width=".7"/><text x="${x + w / 2}" y="${y + 38}" text-anchor="middle" class="kf" ${mono} font-size="${n.length > 4 ? 5.6 : 7}" font-weight="700">${n}</text>${y2 ? `<text x="${x + w / 2}" y="${y + 50}" text-anchor="middle" class="kf" ${mono} font-size="6">${y2}</text>` : ""}
+        <circle cx="${x + w / 2}" cy="${230 - 30}" r="4" class="k" stroke-width="1"/>`; x += w + 3; });
+    out += `<g transform="translate(${x + 6} 230) rotate(14)"><rect x="0" y="-190" width="30" height="190" rx="2" class="pp k" stroke-width="1"/><path d="M0 -178h30M0 -12h30" class="g" stroke-width="1"/><rect x="3" y="-164" width="24" height="20" rx="1.5" class="nt k" stroke-width=".7"/><text x="15" y="-151" text-anchor="middle" class="kf" ${mono} font-size="6" font-weight="700">10-Q</text></g>`;
+    return out + `<path d="M-20 231H${x + 80}" class="k" stroke-width="2.2"/><path d="M-20 237H${x + 80}" class="k" stroke-width=".7"/>`;
+  }
+  function radarCard() {
+    const ax = ["VALUE", "QUALITY", "MOMENTUM", "REVISIONS", "GROWTH", "SENTIMENT"], sc = [.62, .88, .8, .92, .74, .58], med = [.5, .55, .5, .48, .52, .5];
+    const cx = 150, cy = 158, Rr = 86, P = (i, k) => { const t = -Math.PI / 2 + i * Math.PI / 3; return [cx + Rr * k * Math.cos(t), cy + Rr * k * Math.sin(t)]; };
+    const poly = ks => ks.map((k, i) => P(i, k).map(f1).join(",")).join(" ");
+    let rings = ""; [.25, .5, .75, 1].forEach(k => rings += `<polygon points="${poly(ax.map(() => k))}" class="k" stroke-width="${k === 1 ? 1 : .4}" opacity="${k === 1 ? .9 : .5}"/>`);
+    let spokes = "", labs = ""; ax.forEach((a, i) => { const [x, y] = P(i, 1), [lx, ly] = P(i, 1.2); spokes += `M${cx} ${cy}L${f1(x)} ${f1(y)}`; labs += `<text x="${f1(lx)}" y="${f1(ly + 3)}" text-anchor="${Math.abs(lx - cx) < 5 ? "middle" : lx > cx ? "start" : "end"}" class="kf" ${mono} font-size="7.5" font-weight="700" letter-spacing="1">${a}</text>`; });
+    return `${shadow(300, 290)}<rect width="300" height="290" class="pp k" stroke-width="1"/>
+      <text x="16" y="28" class="kf" ${F.wsj} font-size="15" font-weight="700">Factor Scorecard</text><text x="284" y="28" text-anchor="end" class="kf" ${mono} font-size="7" font-weight="700">${tk}</text><path d="M14 38H286" class="k" stroke-width=".9"/>
+      ${rings}<path d="${spokes}" class="k" stroke-width=".5" opacity=".5"/>
+      <polygon points="${poly(med)}" class="k" stroke-width="1" stroke-dasharray="3 3" opacity=".7"/>
+      <polygon points="${poly(sc)}" fill="url(#h${id})" opacity=".6"/><polygon points="${poly(sc)}" class="k" stroke-width="1.8" stroke-linejoin="round"/>
+      ${sc.map((k, i) => { const [x, y] = P(i, k); return `<circle cx="${f1(x)}" cy="${f1(y)}" r="3" class="gf"/>`; }).join("")}${labs}
+      <rect x="16" y="258" width="92" height="20" rx="10" class="gf" opacity=".85"/><text x="62" y="272" text-anchor="middle" class="pp" ${mono} font-size="9" font-weight="700">SCORE 82/100</text>
+      <path d="M190 268h16" class="k" stroke-width="1.8"/><text x="210" y="271" class="kf" ${mono} font-size="6.5">${tk}</text><path d="M236 268h16" class="k" stroke-width="1" stroke-dasharray="3 3"/><text x="256" y="271" class="kf" ${mono} font-size="6.5">SECTOR</text>`;
+  }
+  const SS = [
+    () => candles(560, 1192, 50, 250, {op: .5, vol: 18}) + g(880, 30, 0, 1.55, boardOf(SR, "WATCHLIST · CLOSE")),
+    () => grid(560) + g(740, 46, -8, 1, doc("FORM 10-Q", 230, 280, `${co} · QUARTERLY REPORT`)) + g(930, 30, 4, 1, report()) + g(800, 318, -10, .9, pen()),
+    () => candles(560, 1192, 40, 250, {op: .3}) + g(740, 34, -4, 1, transcript()) + g(1086, 66, 0, 1, mic()) + g(900, 238, -5, 1, badge()),
+    () => grid(560) + g(790, 26, -5, 1, notepad()) + g(1060, 196, -14, 1.05, stamp()) + g(820, 330, -16, .9, pen()),
+    () => candles(560, 1192, 40, 250, {op: .3}) + g(740, 40, -3, 1.05, statement()) + g(1058, 254, 0, 1, lens(40, "4.46")),
+    () => candles(560, 1192, 40, 250, {op: .35}) + g(760, 70, -6, 1.12, cert()) + g(880, 330, -12, .9, pen()),
+    () => candles(560, 1192, 30, 190, {op: .35}) + g(950, 54, 0, .84, tower()),
+    () => g(770, 30, -3, 1.08, tear()) + g(880, 330, -14, .85, pen()),
+    () => ptChart(),
+    () => funnel(),
+    () => candles(560, 1192, 40, 250, {op: .3}) + g(780, 40, -4, 1.08, segPage()) + g(1090, 290, -12, .95, glasses()),
+    () => grid(560) + g(740, 30, -3, 1.05, sheet()) + g(1090, 150, 10, 1, calc()),
+    () => candles(560, 1192, 30, 200, {op: .3, ma: false}) + g(820, 160, 0, 1.1, machine()) + tape(),
+    () => candles(560, 1192, 40, 250, {op: .3}) + g(860, 56, 0, 1, shelf2()),
+    () => candles(560, 1192, 40, 250, {op: .3}) + g(830, 22, -3, .98, radarCard())
+  ];
+  const body = art >= 25 ? (SS[art - 25] || SS[0])() : (S[(art - 1 + S.length) % S.length] || S[0])();
   return `<svg viewBox="0 0 1200 360" preserveAspectRatio="${fit}" aria-hidden="true"><defs>
     <linearGradient id="f${id}" gradientUnits="userSpaceOnUse" x1="470" x2="760" y1="0" y2="0"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>
     <mask id="m${id}"><rect width="1200" height="360" fill="url(#f${id})"/></mask><clipPath id="c${id}"><circle r="64"/></clipPath><linearGradient id="d${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".16"/><stop offset=".5" stop-color="#000" stop-opacity=".04"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
@@ -734,7 +976,7 @@ function heroHTML(e, s) {
     meta = `<span>${esc(e.date_long)}</span><span><b>${esc(st.ideas ?? "–")}</b> trade ideas</span><span><b>${esc(st.ru ?? "–")}</b> RU</span>${st.stocks != null ? `<span><b>${esc(st.stocks)}</b> stocks</span>` : ""}${st.etfs != null ? `<span><b>${esc(st.etfs)}</b> ETFs</span>` : ""}`;
     tape = s && s.levels && s.levels.length ? `<div class="tape">${s.levels.map(l => `<div><span>${esc(l.label)}</span><b class="num">${esc(l.text)}</b></div>`).join("")}<div class="asof">Closing levels as of ${esc(shortDate(s.asof))}</div></div>` : "";
   }
-  return `<section class="hero"><div class="art">${bannerArt(s, undefined, artFor(e.date))}</div><div class="veil"></div>
+  return `<section class="hero"><div class="art">${bannerArt(s, undefined, e.cat === "stocks" ? artForS(e.date) : artFor(e.date))}</div><div class="veil"></div>
     <div class="hero-in"><div class="hero-tx">
       <div class="eyebrow"><span class="dot${latest ? "" : " old"}"></span>${latest ? "Latest" : "Archive"} ${esc(catOf(e.cat).label)} edition</div>
       <h1>${esc(e.headline)}</h1>
@@ -875,11 +1117,18 @@ document.getElementById("f").onsubmit = async ev => {
 document.getElementById("lockart").innerHTML = bannerArt(null, "xMaxYMax meet");
 if (PICK) {
   const bar = document.createElement("div"); bar.className = "artbar";
-  bar.innerHTML = `<button id="ap">‹</button><select id="as">${ART_NAMES.map((n, i) => `<option value="${i + 1}">${i + 1}. ${n}</option>`).join("")}</select><button id="an">›</button>`;
+  bar.innerHTML = `<button id="ap">‹</button><select id="as"></select><button id="an">›</button>`;
   document.body.appendChild(bar);
-  const sel = document.getElementById("as"), set = n => { const L = ART_NAMES.length; ART = (n - 1 + L) % L + 1; sel.value = ART; try { localStorage.setItem("mr-art", ART); } catch (e) {}
-    document.getElementById("lockart").innerHTML = bannerArt(null, "xMaxYMax meet"); if (CUR) { const e = ITEMS.find(x => x.date === CUR); render(e, CACHE[ck(e)]); } };
-  sel.value = ART; sel.onchange = () => set(+sel.value); document.getElementById("ap").onclick = () => set(ART - 1); document.getElementById("an").onclick = () => set(ART + 1);
+  const sel = document.getElementById("as"), rng2 = () => CAT === "stocks" ? [25, ART_NAMES.length] : [1, 24];
+  let shown = "";
+  const sync = () => { const [a, b] = rng2(), cur = CAT === "stocks" ? ART_S : ART;
+    if (shown !== CAT) { shown = CAT; sel.innerHTML = ART_NAMES.slice(a - 1, b).map((n, i) => `<option value="${a + i}">${CAT === "stocks" ? a + i - 24 : a + i}. ${n}</option>`).join(""); }
+    sel.value = cur; };
+  const set = n => { const [a, b] = rng2(), L = b - a + 1, v = (n - a + L) % L + a;
+    if (CAT === "stocks") { ART_S = v; try { localStorage.setItem("mr-art-s", v); } catch (e) {} } else { ART = v; try { localStorage.setItem("mr-art", v); } catch (e) {} }
+    sync(); document.getElementById("lockart").innerHTML = bannerArt(null, "xMaxYMax meet"); if (CUR) { const e = ITEMS.find(x => x.date === CUR); render(e, CACHE[ck(e)]); } };
+  sel.onchange = () => set(+sel.value); document.getElementById("ap").onclick = () => set(+sel.value - 1); document.getElementById("an").onclick = () => set(+sel.value + 1);
+  setInterval(sync, 400); sync();
 }
 
 const k0 = storedKey(); if (k0) show(k0).catch(() => forget()); else document.getElementById("pw").focus();
