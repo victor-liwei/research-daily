@@ -143,7 +143,7 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
 .tb-btn{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:9px;border:1px solid var(--bar-line);background:rgba(255,255,255,.06);color:var(--on-bar);font-size:13px;font-weight:550;cursor:pointer;white-space:nowrap}
 .tb-btn:hover{background:rgba(255,255,255,.12)}
 .menu{display:none}
-#theme{padding:0 10px}.ic-sun{display:none}:root[data-theme="dark"] .ic-sun{display:block}:root[data-theme="dark"] .ic-moon{display:none}
+#theme,#look{padding:0 10px}#lookname{display:none}  /* style picker: icon only in the bar; the menu shows names and swatches */.ic-sun{display:none}:root[data-theme="dark"] .ic-sun{display:block}:root[data-theme="dark"] .ic-moon{display:none}
 
 /* research category toggle (top bar on desktop, own row on phones). Categories come from the manifest. */
 .cattog{display:flex;gap:2px;padding:3px;border-radius:11px;background:rgba(255,255,255,.07);border:1px solid var(--bar-line);margin-left:6px;flex:none}
@@ -215,8 +215,7 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
 .cx-ghost>.cx-gin{position:absolute;margin:0!important}
 .cx-anim{will-change:transform,opacity}
 
-/* mobile edition strip + drawer */
-.strip{display:none}
+/* archive drawer (phones and tablets) */
 .scrim{display:none}
 
 /* main */
@@ -350,34 +349,59 @@ svg.pcurve .gl{stroke:var(--line)}svg.pcurve .z{stroke:var(--muted);opacity:.6}s
 
 @media (max-width:1400px){.tape{gap:6px 14px;padding:12px 20px}.tape span{margin-right:4px}}
 @media (max-width:1100px){.idea{grid-template-columns:28px minmax(0,1fr) 110px}.idea .ru{display:none}}
-@media (max-width:900px){
-  .topbar .cattog{display:none}
-  .catrow{display:flex;padding:8px 12px;background:var(--bar);border-bottom:1px solid var(--bar-line)}
-  .catrow .cattog{display:flex;margin:0;width:100%}.catrow .cattog button{flex:1;justify-content:center}
+/* phones and touch tablets (iPad in either orientation): the archive panel becomes the drawer behind the menu button.
+   Desktop and laptop screens never match this (hover:none + coarse pointer only) and keep the fixed side panel. */
+/* touch screens = no-hover/coarse pointer, or any touch pointer (an iPad with a trackpad attached); Macs never match */
+@media (max-width:900px), (any-pointer:coarse) and (max-width:1366px){
   .menu{display:inline-flex}
   .shell{display:block}
   .side{position:fixed;z-index:40;left:0;top:0;bottom:0;height:auto;width:min(88vw,340px);transform:translateX(-102%);transition:transform .22s ease;padding-top:calc(16px + env(safe-area-inset-top,0px));box-shadow:0 0 40px rgba(0,0,0,.25)}
   .side.open{transform:none}
   .scrim{display:block;position:fixed;inset:0;z-index:35;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .2s}
   .scrim.open{opacity:1;pointer-events:auto}
-  .strip{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;background:linear-gradient(90deg,var(--side-a),var(--side-b));border-bottom:1px solid var(--side-line);scrollbar-width:none}
-  .strip::-webkit-scrollbar{display:none}
-  .sc{flex:none;display:flex;flex-direction:column;align-items:center;min-width:62px;padding:6px 10px;border-radius:10px;border:1px solid var(--side-line);color:var(--side-ink);background:rgba(255,255,255,.06);font-size:11px}
-  .sc b{font-size:16px;line-height:1.2}
-  .sc.on{background:var(--side-ink);border-color:var(--side-ink);color:var(--side-b)}
-  .sc.all{justify-content:center;gap:2px;color:var(--sel-ring);font-weight:650}
+}
+/* touch tablets in landscape keep the desktop banner; only the market strip drops one item to fit one line */
+@media (any-pointer:coarse) and (min-width:901px) and (max-width:1366px){
+  .tape{flex-wrap:nowrap}.tape .tx-o{display:none}  /* one line: drop breakeven / month to date / names screened */
+}
+@media (max-width:900px){
+  .topbar .cattog{display:none}
+  .catrow{display:flex;padding:6px 12px;background:var(--bar);border-bottom:1px solid var(--bar-line);position:sticky;top:calc(var(--top) + env(safe-area-inset-top,0px));z-index:29;transition:transform .25s ease}
+  .catrow.away{transform:translateY(-100%)}  /* slides under the top bar while scrolling down, back on any scroll up */
+  .catrow .cattog{display:flex;margin:0;width:100%}.catrow .cattog button{flex:1;justify-content:center}
   .main{padding:14px 16px 32px}
   .two{grid-template-columns:1fr}
-  .hero-in{padding:150px 18px 16px;min-height:0}.hero-tx{max-width:none}
-  .hero .art{bottom:auto;height:180px}.hero .art g.fade{mask:none}
-  .hero .veil{bottom:auto;height:181px;background:linear-gradient(180deg,transparent 35%,var(--hero) 100%)}
+  .hero{min-height:0}  /* no shared banner height on small screens: it left a blank band under the buttons */
+  .hero-in{padding:22px 22px 18px;min-height:0}.hero-tx{max-width:56%}
+  /* small screens: artwork and text share one grid cell above the tape, so the (smaller) artwork can sit centred on the right */
+  .hero{display:grid;grid-template-columns:minmax(0,1fr)}
+  .hero>.art,.hero>.veil,.hero>.hero-in{grid-area:1/1}.hero>.tape{grid-area:2/1}
+  .hero .art,.hero .veil{position:relative;inset:auto}
+  .hero .art{align-self:center;justify-self:end;width:42%;height:76%;margin-right:10px}
+  .hero h1{font-size:20px}
+  .hero-tx .ctas{width:170%}       /* buttons may run under the artwork so they stay on one row */
+  .hero-tx .ctas .hint{max-width:58%}
+  .ctas .hint.ph{display:none}  /* Performance banner: no summary line on tablets */
+  .card-h{flex-wrap:wrap;row-gap:2px}.card-h h3{flex:none}
   .hstats{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .tape{padding:10px 18px}.tape .asof{margin-left:0;width:100%}
+  .tape{padding:9px 18px}.tape>div:not(.asof){display:none}.tape .asof{margin-left:auto}  /* phones / iPad portrait: just the as-of stamp */
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
   .brand small{display:none}
   .tb-btn .lbl{display:none}
 }
+@media (max-width:600px){  /* phones: headline from the top, artwork faded behind it on the right */
+  .hero-in{padding:20px 18px 16px}.hero-tx{max-width:none}
+  .hero .art{width:50%;height:46%;margin:14px -20px 0 0;align-self:start}
+  .hero .veil{background:linear-gradient(90deg,var(--hero) 0%,var(--hero) 52%,color-mix(in srgb,var(--hero) 88%,transparent) 66%,color-mix(in srgb,var(--hero) 50%,transparent) 84%,color-mix(in srgb,var(--hero) 15%,transparent) 100%)}
+  .hero h1{margin-top:8px;font-size:19px;max-width:80%}
+  .ctas{margin-top:14px}.ctas .hint{display:none}
+  .tape{font-size:12.5px;gap:4px 14px;padding:10px 18px}
+  .card-h .note{flex-basis:100%}
+  .hero-tx .ctas{width:auto}.hero-tx .ctas .hint{max-width:none}
+}
 @media (max-width:560px){
+  .brand .nm2{display:none}
+  .topbar{gap:8px;padding:0 12px}.topbar .brand{gap:8px}
   .hstats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .hs .v{font-size:19px}
   .cta{flex:1 1 auto;justify-content:center}
@@ -385,7 +409,7 @@ svg.pcurve .gl{stroke:var(--line)}svg.pcurve .z{stroke:var(--muted);opacity:.6}s
   .meta span:first-child{flex-basis:100%}.meta span:nth-child(2)::before{display:none}
   .idea{grid-template-columns:28px minmax(0,1fr)}.idea .conv{display:none}
 }
-@media (prefers-reduced-motion:reduce){.skel,.side,.scrim,.cta .go{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){.skel,.side,.scrim,.catrow,.cta .go{animation:none!important;transition:none!important}}
 </style></head><body>
 
 <div class="lockscreen" id="lock">
@@ -401,10 +425,10 @@ svg.pcurve .gl{stroke:var(--line)}svg.pcurve .z{stroke:var(--muted);opacity:.6}s
 <div id="app" hidden>
   <header class="topbar">
     <button class="tb-btn menu" id="menu" aria-label="Show archive"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></button>
-    <div class="brand"><span class="mk"><svg viewBox="0 0 24 24"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg></span><span class="nm">Market Pulse Research Dashboard<small id="catsub">Equities · Rates · Credit · FX · Commodities</small></span></div>
+    <div class="brand"><span class="mk"><svg viewBox="0 0 24 24"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg></span><span class="nm">Market Pulse<span class="nm2"> Research Dashboard</span><small id="catsub">Equities · Rates · Credit · FX · Commodities</small></span></div>
     <nav class="cattog" id="cattog" role="tablist" aria-label="Research category"></nav>
     <span class="sp"></span>
-    <div class="lookpick"><button class="tb-btn" id="look" aria-haspopup="true" aria-expanded="false" title="Style"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11.5" r="1.2"/><circle cx="10.5" cy="7.5" r="1.2"/><circle cx="15.5" cy="8" r="1.2"/></svg><span class="lbl" id="lookname">Style</span></button>
+    <div class="lookpick"><button class="tb-btn" id="look" aria-haspopup="true" aria-expanded="false" title="Style" aria-label="Style"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11.5" r="1.2"/><circle cx="10.5" cy="7.5" r="1.2"/><circle cx="15.5" cy="8" r="1.2"/></svg><span class="lbl" id="lookname">Style</span></button>
       <div class="lookmenu" id="lookmenu" hidden><h4>Style</h4>
         <button data-k="night"><i class="sw night"></i><span>Night<small>Navy with blue line-art</small></span></button>
         <button data-k="broadsheet"><i class="sw broadsheet"></i><span>Broadsheet<small>Newsprint and ink</small></span></button>
@@ -413,7 +437,6 @@ svg.pcurve .gl{stroke:var(--line)}svg.pcurve .z{stroke:var(--muted);opacity:.6}s
     <button class="tb-btn" id="out"><svg class="i" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg><span class="lbl">Sign out</span></button>
   </header>
   <div class="catrow"><nav class="cattog" id="cattog2" role="tablist" aria-label="Research category"></nav></div>
-  <nav class="strip" id="strip" aria-label="Recent editions"></nav>
   <div class="shell">
     <aside class="side" id="side" aria-label="Archive">
       <div class="side-h"><h2 id="sideh">Macro editions</h2><span id="count"></span></div>
@@ -1027,10 +1050,6 @@ function drawList(q) {
         <div class="mt num">${metaLine(x)}</div></div></a>`;
   }
   list.innerHTML = html || `<div class="empty">${ITEMS.length ? (CAT === "perf" ? "No days match your search." : "No editions match your search.") : "No " + esc(catOf(CAT).label) + " editions yet."}</div>`;
-  const strip = document.getElementById("strip");
-  strip.innerHTML = ITEMS.slice(0, 12).map(x => `<a class="sc${x.date === CUR ? " on" : ""}" href="#${hashFor(x)}"><span>${esc(x.dow3)}</span><b class="num">${esc(x.day)}</b><span>${esc(x.mon3)}</span></a>`).join("")
-    + `<button class="sc all" id="all">${IC.cal}All</button>`;
-  document.getElementById("all").onclick = () => toggleSide(true);
 }
 
 function heroHTML(e, s) {
@@ -1044,11 +1063,11 @@ function heroHTML(e, s) {
     meta = `<span>${esc(e.date_long)}</span><span><b>${esc(n ?? "–")}</b> stock ideas</span><span><b>${esc(m ?? "–")}</b> ETF ideas</span>${s && s.preset ? `<span>Tilt <b>${esc(s.preset)}</b></span>` : ""}`;
     if (s && s.breadth) tape = `<div class="tape"><div><span>Above 200-day</span><b class="num">${fmt(s.breadth.above_200d, 0)}%</b></div><div><span>Above 50-day</span><b class="num">${fmt(s.breadth.above_50d, 0)}%</b></div>
       <div><span>52w highs / lows</span><b class="num">${esc(s.breadth.new_highs)} / ${esc(s.breadth.new_lows)}</b></div><div><span>Median fwd P/E</span><b class="num">${fmt(s.pe, 1)}x</b></div>
-      <div><span>Names screened</span><b class="num">${esc(s.scored ?? "–")}</b></div><div class="asof">As of ${esc(shortDate(s.asof))} close</div></div>`;
+      <div class="tx-o"><span>Names screened</span><b class="num">${esc(s.scored ?? "–")}</b></div><div class="asof">As of ${esc(shortDate(s.asof))} close</div></div>`;
   } else {
     const st = s ? s.stats : {ideas: e.n_ideas, ru: e.ru};
     meta = `<span>${esc(e.date_long)}</span><span><b>${esc(st.ideas ?? "–")}</b> trade ideas</span><span><b>${esc(st.ru ?? "–")}</b> RU</span>${st.stocks != null ? `<span><b>${esc(st.stocks)}</b> stocks</span>` : ""}${st.etfs != null ? `<span><b>${esc(st.etfs)}</b> ETFs</span>` : ""}`;
-    tape = s && s.levels && s.levels.length ? `<div class="tape">${s.levels.map(l => `<div><span>${esc(l.label)}</span><b class="num">${esc(l.text)}</b></div>`).join("")}<div class="asof">As of ${esc(shortDate(s.asof))} close</div></div>` : "";
+    tape = s && s.levels && s.levels.length ? `<div class="tape">${s.levels.map(l => `<div${/breakeven/i.test(l.label) ? ' class="tx-o"' : ""}><span>${esc(l.label)}</span><b class="num">${esc(l.text)}</b></div>`).join("")}<div class="asof">As of ${esc(shortDate(s.asof))} close</div></div>` : "";
   }
   return `<section class="hero"><div class="art">${bannerArt(s, undefined, e.cat === "stocks" ? artForS(e.date) : artFor(e.date))}</div><div class="veil"></div>
     <div class="hero-in"><div class="hero-tx">
@@ -1066,12 +1085,12 @@ const usdS = v => v == null ? "–" : (v < 0 ? "−" : v > 0 ? "+" : "") + "$" +
 const pc = v => v > 0 ? "up" : v < 0 ? "dn" : "flat";
 function perfHero(e, s) {
   const latest = e === ITEMS[0], c = s && s.combined, secs = s ? s.sections : [];
-  const meta = s ? secs.map(x => `<span><span class="pdot" style="background:${x.colour}"></span>${esc(x.label)} <b class="${pc(x.cum_bp)}">${bp(x.cum_bp)}</b></span>`).join("") + `<span><b>${esc(s.n_open)}</b> open ideas</span><span><b>${esc(s.n_awaiting)}</b> awaiting fill</span>`
+  const meta = s ? secs.map(x => `<span><span class="pdot" style="background:${x.colour}"></span>${esc(x.label)} <b class="${pc(x.cum_bp)}">${bp(x.cum_bp)}</b></span>`).join("") + `<span><b>${esc(s.n_open)}</b> open ideas</span>`
     : `<span>${esc(e.date_long)}</span>`;
   const files = e.files.map((f, i) => `<a class="cta${i ? "" : " primary"}" href="${esc(f.path)}">${IC[f.kind]}${i ? LBL[f.kind] : `Open full dashboard<span class="go">${IC.arrow}</span>`}</a>`).join("")
-    + `<div class="hint">The full dashboard has the equity curves, every position with its legs and fills, the daily contribution grid, attribution and the complete trade log.</div>`;
+    + `<div class="hint ph">The full dashboard has the equity curves, every position with its legs and fills, the daily contribution grid, attribution and the complete trade log.</div>`;
   const tape = c ? `<div class="tape"><div><span>All research</span><b class="num">${usdS(c.cum_usd)}</b></div><div><span>Last day</span><b class="num">${usdS(c.day_usd)}</b></div>
-      <div><span>Month to date</span><b class="num">${usdS(c.mtd_usd)}</b></div><div><span>Max drawdown</span><b class="num">${usdS(c.max_dd_usd)}</b></div>
+      <div class="tx-o"><span>Month to date</span><b class="num">${usdS(c.mtd_usd)}</b></div><div><span>Max drawdown</span><b class="num">${usdS(c.max_dd_usd)}</b></div>
       <div><span>Hit rate</span><b class="num">${c.hit_rate == null ? "–" : c.hit_rate + "%"}</b></div><div class="asof">Marked to the ${esc(shortDate(s.asof))} close</div></div>` : "";
   return `<section class="hero"><div class="art">${bannerArt(s, undefined, 40)}</div><div class="veil"></div>
     <div class="hero-in"><div class="hero-tx">
@@ -1117,7 +1136,7 @@ const HSRC = {
   p_day: ["Yahoo Finance closes for that day; fills from the trade log.", "That day's P&L per section in bp of fund, the biggest contributing ideas, and every entry, exit, resize and roll."],
   p_score: ["Yahoo Finance closes; idea states from the bookings and trade log.", "Cumulative P&L in bp and US$, last day, hit rate (share of marked ideas in profit), open ideas and maximum drawdown per $100m fund."],
   p_open: ["Yahoo Finance closes; futures contracts, FX and Cboe vol indices from Yahoo.", "Return on capital at risk and bp of fund since entry. Options are modelled (Black-Scholes with the implied-vol index)."],
-  p_pipe: ["Bookings of the latest editions.", "Ideas published but not yet filled, or waiting on a stated condition (pending, 0 risk units)."],
+  p_pipe: ["Bookings of the latest editions.", "Published ideas waiting on a stated condition (pending, 0 risk units) before they join the paper record."],
 };
 const INF = k => `<button class="info" type="button" aria-label="Data sources and method" data-k="${k}">${IC.info}</button>`;
 const itip = document.createElement("div"); itip.className = "itip"; document.body.appendChild(itip);
@@ -1149,8 +1168,7 @@ function renderPerf(e, s) {
       <div class="kv"><div><span>Day</span><b class="num ${pc(day.pnl[x.key])}">${bp(day.pnl[x.key], 2)}</b></div><div><span>Hit rate</span><b>${x.hit_rate == null ? "–" : x.hit_rate + "%"}</b></div><div><span>Open</span><b>${x.n_open}</b></div><div><span>Max DD</span><b class="num">${bp(x.max_dd_bp)}</b></div></div></div>`).join("");
   const open = s.open.length ? s.open.map(o => `<div class="pop"><span class="pdot" style="background:${esc(s.colour[o.s])}"></span><div class="t"><b>${esc(o.t)}</b><span>${esc(o.legs)}</span></div>
       ${spark(o.spark, (o.bp ?? 0) >= 0 ? "up" : "dn", 30) || "<span></span>"}<span class="num r ${pc(o.ret)}">${o.ret == null ? '<span class="chip">new</span>' : (o.ret > 0 ? "+" : "") + fmt(o.ret) + "%"}</span><b class="num r ${pc(o.bp)}">${bp(o.bp, 2)}</b></div>`).join("") : `<div class="empty">No open positions yet.</div>`;
-  const pipe = (s.pipeline.awaiting ? `<div class="pip"><span class="evp ROLL">awaiting fill</span><span><b>${s.pipeline.awaiting}</b> ideas fill at the ${esc(shortDate(s.pipeline.next_fill))} close</span></div>` : "")
-    + s.pipeline.pending.map(p => `<div class="pip"><span class="evp PENDING">pending</span><span><b>${esc(p.t)}</b> <span class="muted">${esc(p.cond)}</span></span></div>`).join("");
+  const pipe = s.pipeline.pending.map(p => `<div class="pip"><span class="evp PENDING">pending</span><span><b>${esc(p.t)}</b> <span class="muted">${esc(p.cond)}</span></span></div>`).join("");
   v.innerHTML = perfHero(e, s) + `
     <section class="card"><div class="card-h"><h3>${IC.trend}Cumulative P&amp;L${INF("p_curve")}</h3><span class="note">every published trade idea, filled at the close of the first full session after publication (Asia-Pacific at the open)</span></div><div class="card-b">${curveSVG(s, e.date)}</div></section>
     <div class="two">
@@ -1320,14 +1338,14 @@ async function switchCat(k) {
   if (k === CAT || !CATS.some(c => c.key === k)) return;
   cxFinish();
   const dir = CATS.findIndex(c => c.key === k) > CATS.findIndex(c => c.key === CAT) ? 1 : -1;
-  const g = {view: cxGhost($1("#view"), $1(".main")), list: cxGhost($1("#list"), $1("#side")), strip: cxGhost($1("#strip"), $1("#strip"))};
+  const g = {view: cxGhost($1("#view"), $1(".main")), list: cxGhost($1("#list"), $1("#side"))};
   CX_PREV = cxMeasure();
   try { history.pushState(null, "", k === "macro" ? location.pathname + location.search : "#" + k); } catch (err) {}
   setCat(k); select("");
   CX_PREV = null;
-  const L = [], v = $1("#view"), run = {list: L, ghosts: [g.view, g.list, g.strip]};
+  const L = [], v = $1("#view"), run = {list: L, ghosts: [g.view, g.list]};
   CX_RUN = run;
-  const side = [g.list, g.strip].filter(Boolean);
+  const side = [g.list].filter(Boolean);
   if (CX_RM.matches) {
     [g.view, ...side].forEach(x => x && cxA(x.inner, [{opacity: 1}, {opacity: 0}], {d: 150, e: "linear"}, L));
     cxA(v, [{opacity: 0}, {opacity: 1}], {d: 150, e: "linear"}, L);
@@ -1345,7 +1363,6 @@ async function switchCat(k) {
     [...v.children].filter(c => c !== nh).forEach(c => cxA(c, [{opacity: 0, transform: "translateY(12px)"}, {opacity: 1, transform: "none"}], {d: 380, delay: 170}, L));
     side.forEach(x => cxA(x.inner, [{opacity: 1, transform: "none"}, {opacity: 0, transform: "translateY(-8px)"}], {d: 170, e: CX_EI}, L));
     if (cxShown($1("#list"))) $all("#list > *").slice(0, 9).forEach((el, i) => cxA(el, [{opacity: 0, transform: "translateY(12px)"}, {opacity: 1, transform: "none"}], {d: 380, delay: 70 + i * 32}, L));
-    if (cxShown($1("#strip"))) $all("#strip > *").slice(0, 8).forEach((el, i) => cxA(el, [{opacity: 0, transform: `translateX(${dir * 16}px)`}, {opacity: 1, transform: "none"}], {d: 340, delay: 70 + i * 28}, L));
     ["#sideh", "#count", "#catsub"].forEach(s => cxA($1(s), [{opacity: 0, transform: "translateY(4px)"}, {opacity: 1, transform: "none"}], {d: 260, delay: 70}, L));
   }
   Promise.all(L.map(x => x.a.finished)).then(() => { if (CX_RUN === run) cxFinish(); }, () => {});
@@ -1387,6 +1404,14 @@ async function show(raw) {
   mark();
   document.getElementById("out").onclick = () => { forget(); location.replace(location.pathname); };
   document.getElementById("menu").onclick = () => toggleSide(true);
+  { // small screens: the category row hides while scrolling down and returns on scroll up or near the top
+    const row = $1(".catrow"); let lastY = scrollY, tick = 0;
+    addEventListener("scroll", () => { if (tick) return; tick = requestAnimationFrame(() => {
+      tick = 0; const y = scrollY, d = y - lastY;
+      if (y < 60 || d < -6) row.classList.remove("away"); else if (d > 6) row.classList.add("away");
+      if (Math.abs(d) > 6 || y < 60) lastY = y;
+    }); }, {passive: true});
+  }
   document.getElementById("scrim").onclick = () => toggleSide(false);
   document.getElementById("q").oninput = ev => drawList(ev.target.value.trim().toLowerCase());
   window.addEventListener("hashchange", route);
