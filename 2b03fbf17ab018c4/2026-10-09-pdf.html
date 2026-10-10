@@ -3,7 +3,7 @@
 <title>Market Pulse Research 2026-10-09 · PDF report</title>
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("mr-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}
 document.documentElement.dataset.look="broadsheet";try{const l=localStorage.getItem("mr-look");if(/^(night|broadsheet|greenback)$/.test(l))document.documentElement.dataset.look=l}catch(e){}</script>
-<!-- template: site file page v2.0.0 (slim bar with archive link and format switcher above the decrypted file) -->
+<!-- template: site file page v2.0.1 (slim bar with archive link and format switcher above the decrypted file) -->
 <style>
 :root{--bar:#13294b;--on:#ffffff;--on2:#b9c6da;--line:rgba(255,255,255,.14);--page:#f6f5f1;--ink:#0b0b0b;--muted:#52514e;--acc:#2a78d6;--bh:46px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bar:#0f1f38;--page:#0d0d0d;--ink:#ffffff;--muted:#c3c2b7;--acc:#3987e5;color-scheme:dark}}
@@ -74,6 +74,13 @@ const KIND = "pdf", NAME = "Research_Daily_2026-10-09.pdf", HOME = "../", BIN = 
     const theme = document.documentElement.dataset.theme || "light";
     const html = new TextDecoder().decode(bytes).replace(/<html(?![^>]*data-theme)/i, `<html data-theme="${theme}"`), f = document.createElement("iframe");
     f.className = "frame"; f.srcdoc = html; f.title = document.title;
+    // a srcdoc page resolves "#section" links against this page's URL, so a plain click would reload this
+    // whole viewer inside the frame (a second Archive bar). Keep in-page links inside the dashboard instead.
+    f.addEventListener("load", () => { const d = f.contentDocument; if (!d) return;
+      d.addEventListener("click", e => { const a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a || e.defaultPrevented && !a.closest("nav")) return;
+        e.preventDefault(); const id = decodeURIComponent(a.getAttribute("href").slice(1)), t = id && d.getElementById(id);
+        if (t) { if (t.tagName === "DETAILS") t.open = true; t.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"}); }
+        else if (id) location.hash = id; }); });
     msg.remove(); document.body.appendChild(f);
   }
 })();
