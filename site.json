@@ -22,12 +22,16 @@
   "stocks-2026-10-09-pdf.html": "776d0f00c7c27574b6e9f8985d34de738fed08546f62c00284ea5a8e1431d7b3",
   "stocks-2026-10-09-email.html": "326fae291a3d8cf0f6c818225288c3c0da63743d1562c1b1715940a057d11c84",
   "stocks-2026-10-09-summary.bin": "9047b55bd99f18dc274bced8e4ade1e5df539c58fc3d648c429d41ca3306c73b",
-  "perf-dashboard.html": "2a8fafe95d7a59f4bf9c01737ecceb0c0b0ef1a2410931d52905a911fc180651",
-  "perf-summary.bin": "5a3f16295f7aa78644c1074b42a67403db8ae71b90ea0dd35dbaac2b9a65501b",
+  "perf-dashboard.html": "140ae73f21e0f17313d3f21abc5f12ac8f3f255568e9e5379ca7f6802adf2765",
+  "perf-summary.bin": "2f99463b3fb9e44dabd870f02b872d6c052ad809575767114ba1a6219462b48f",
   "hill-2026-10-10-dashboard.html": "6c8d6028c9216aafd813f02af45bf8998625f3f321da5f9925331a0e948318d7",
   "hill-2026-10-10-pdf.html": "5a4639d1aecf4372294a0453ad1da0906da1bd2399742df80b27230cca0f55a2",
   "hill-2026-10-10-email.html": "cefb4c011a77c4b81356be50343820fbdf9ac41ecd53e56a2e9f022bde613227",
-  "hill-2026-10-10-summary.bin": "2dcd2a891af9571dacc9a5f33b8fa8cee3ee274fecbbfe0ee74d16c70202ca34"
+  "hill-2026-10-10-summary.bin": "2dcd2a891af9571dacc9a5f33b8fa8cee3ee274fecbbfe0ee74d16c70202ca34",
+  "hill-2026-10-12-dashboard.html": "c8cedbb4034f1a237c93b473e5d31e540e68d830294cf5ce0fbace020adbd267",
+  "hill-2026-10-12-pdf.html": "0c55b6701ce365e49e5ce3bb9316d7082de23ab685e05bf8bfc2b82172cd0740",
+  "hill-2026-10-12-email.html": "8489e164d5e159d3564451e1218e247212fa9cf2eb3be1cdbb258cd7a09b5eb5",
+  "hill-2026-10-12-summary.bin": "42eb3ea1a2c12983912f303785e9d8baa951cc021d0545a5ac2d8db534a2dc06"
  },
  "key_check": "576b2c5e161fe2c1"
 }
