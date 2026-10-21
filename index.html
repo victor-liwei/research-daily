@@ -139,20 +139,68 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
 .topbar .brand small{color:var(--on-bar-2)}
 .topbar .brand .nm{font-family:var(--brand-font)}
 .topbar .sp{flex:1}
-@media (min-width:1120px){.topbar .cattog{position:absolute;left:50%;transform:translateX(-50%);margin:0}}  /* centred in the bar on wide screens */
 .tb-btn{display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 12px;border-radius:9px;border:1px solid var(--bar-line);background:rgba(255,255,255,.06);color:var(--on-bar);font-size:13px;font-weight:550;cursor:pointer;white-space:nowrap}
 .tb-btn:hover{background:rgba(255,255,255,.12)}
 .menu{display:none}
 #theme,#look{padding:0 10px}#lookname{display:none}  /* style picker: icon only in the bar; the menu shows names and swatches */.ic-sun{display:none}:root[data-theme="dark"] .ic-sun{display:block}:root[data-theme="dark"] .ic-moon{display:none}
 
-/* research category toggle (top bar on desktop, own row on phones). Categories come from the manifest. */
-.cattog{display:flex;gap:2px;padding:3px;border-radius:11px;background:rgba(255,255,255,.07);border:1px solid var(--bar-line);margin-left:6px;flex:none}
-.cattog button{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px;border:0;border-radius:8px;background:none;color:var(--on-bar-2);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
-.cattog button:hover{color:var(--on-bar);background:rgba(255,255,255,.06)}
-.cattog button.on{background:var(--cta-bg);color:var(--cta-fg);box-shadow:0 1px 3px rgba(0,0,0,.25)}
-.cattog button .n{font-size:10.5px;font-weight:700;min-width:18px;height:18px;padding:0 5px;border-radius:9px;display:inline-grid;place-items:center;background:rgba(255,255,255,.12);color:inherit}
-.cattog button.on .n{background:color-mix(in srgb,var(--cta-fg) 12%,transparent)}
+/* section switcher. The full toggle shows whenever it fits the bar (measured, not a breakpoint; centred when it clears the
+   title and buttons, the subtitle drops first). When it does not fit, the compact form named in SW_BAR sits in the top bar
+   (iPad portrait and similar) and the one in SW_ROW in the slim row under it (phones). Sections come from the manifest. */
+:root{--sw-e:cubic-bezier(.32,.72,0,1);--sw-o:cubic-bezier(.22,1,.36,1)}
+.topbar .brand{flex:none}
+html.sw-nosub .topbar .brand small{display:none}
+#sw{flex:none;min-width:0;display:flex;align-items:center;position:relative}
+html.sw-center #sw{position:absolute;left:50%;transform:translateX(-50%)}
+#swm{position:absolute;left:0;top:-200px;visibility:hidden;pointer-events:none;display:flex;white-space:nowrap}
 .catrow{display:none}
+html.sw-row .catrow{display:flex;padding:7px 12px;background:var(--bar);border-bottom:1px solid var(--bar-line);position:sticky;top:calc(var(--top) + env(safe-area-inset-top,0px));z-index:29;transition:transform .25s ease}
+.catrow.away{transform:translateY(-100%)}  /* slides under the top bar while scrolling down, back on any scroll up */
+#swr{width:100%;min-width:0;position:relative}
+.swn{display:flex;gap:2px;padding:3px;border-radius:11px;background:rgba(255,255,255,.07);border:1px solid var(--bar-line);position:relative;isolation:isolate;flex:none}
+.swn button{position:relative;z-index:1;display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px;border:0;border-radius:8px;background:none;color:var(--on-bar-2);font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:color .25s ease}
+.swn button:hover{color:var(--on-bar)}
+.swn button.on{color:var(--cta-fg)}
+.swn button svg{color:color-mix(in srgb,var(--c) 62%,#fff)}
+.swn button.on svg{color:color-mix(in srgb,var(--c) 78%,#fff)}
+.swn button:focus-visible,.sw-pill:focus-visible,.sw-ch:focus-visible,.sw-xc:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+.sw-th{position:absolute;left:0;top:3px;bottom:3px;width:0;border-radius:8px;background:var(--cta-bg);box-shadow:0 1px 3px rgba(0,0,0,.25);z-index:0;pointer-events:none;transition:transform .42s var(--sw-e),width .42s var(--sw-e)}
+/* the section's logo tile, in its theme gradient */
+.sw-tile{--s:22px;width:var(--s);height:var(--s);border-radius:calc(var(--s)*.27);flex:none;display:grid;place-items:center;
+  background:linear-gradient(140deg,var(--t1) 0%,color-mix(in srgb,var(--t1) 45%,var(--t2)) 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 1px 2px rgba(0,0,0,.25)}
+.sw-tile svg.i{width:calc(var(--s)*.6);height:calc(var(--s)*.6);stroke:#fff;stroke-width:2}
+.sw-tile.xs{--s:20px;border-radius:50%}
+/* B. expanding pill: the current section plus the others as coins; opens in place across the bar */
+.sw-pill{display:inline-flex;align-items:center;gap:9px;height:36px;padding:0 10px 0 6px;border-radius:11px;border:1px solid var(--bar-line);background:rgba(255,255,255,.07);color:var(--on-bar);font:inherit;font-size:13.5px;font-weight:650;cursor:pointer;white-space:nowrap;min-width:0;transition:background .2s}
+.sw-pill:hover,.sw-pill[aria-expanded="true"]{background:rgba(255,255,255,.12)}
+.sw-pill .lb{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.sw-pill .chev{width:14px;height:14px;color:var(--on-bar-2)}
+.sw-pill.wide{width:100%;height:38px;padding:0 12px 0 6px}.sw-pill.wide .lb{flex:1;text-align:left}
+.sw-coins{display:inline-flex;align-items:center;padding-left:4px}
+.sw-coins .sw-tile{margin-left:-7px;box-shadow:0 0 0 2px var(--bar),inset 0 0 0 1px rgba(255,255,255,.16)}
+.sw-coins .sw-tile:first-child{margin-left:0}
+.sw-coins .sw-tile svg.i{width:11px;height:11px}
+.sw-x{position:absolute;top:50%;height:44px;margin-top:-22px;z-index:60;display:flex;align-items:center;gap:4px;padding:4px;border-radius:13px;background:color-mix(in srgb,var(--bar) 94%,#fff);border:1px solid var(--bar-line);box-shadow:0 12px 34px rgba(0,0,0,.35);transition:clip-path .44s var(--sw-e)}
+.sw-xs{display:flex;gap:4px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;flex:1;min-width:0;padding:0 2px;-webkit-mask-image:var(--fade);mask-image:var(--fade)}
+.sw-xs::-webkit-scrollbar{display:none}
+.sw-ch{flex:none;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 13px 0 6px;border-radius:9px;border:0;background:rgba(255,255,255,.05);color:var(--on-bar);font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;scroll-snap-align:start;opacity:0;transform:translateX(-10px);transition:opacity .3s ease,transform .4s var(--sw-o),background .2s}
+.sw-x.open .sw-ch{opacity:1;transform:none}
+.sw-ch:hover{background:rgba(255,255,255,.12)}
+.sw-ch.on{background:var(--cta-bg);color:var(--cta-fg);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw-xc{flex:none;width:34px;height:34px;border-radius:9px;border:0;background:rgba(255,255,255,.07);color:var(--on-bar);display:grid;place-items:center;cursor:pointer}
+.sw-xc:hover{background:rgba(255,255,255,.14)}
+/* C. icon rail: every section in view; the current one shows its name, the others their icon (name on hover) */
+.sw-rail button{padding:0 9px;gap:0;transition:color .25s ease,background .3s ease}
+.sw-rail button .lb{display:inline-block;max-width:0;overflow:hidden;opacity:0;transition:max-width .42s var(--sw-e),opacity .25s ease,margin .42s var(--sw-e)}
+.sw-rail button.on .lb{max-width:150px;opacity:1;margin-left:8px}
+.sw-rail button.on{background:var(--cta-bg);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sw-rail button svg{width:17px;height:17px}
+.sw-rail button:not(.on)::before{content:"";position:absolute;left:50%;bottom:3px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:color-mix(in srgb,var(--c) 55%,#fff);opacity:.55}
+.sw-tip{position:fixed;z-index:80;padding:6px 10px;border-radius:8px;background:var(--surface);color:var(--ink);font-size:12.5px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.22);border:1px solid var(--line);pointer-events:none;white-space:nowrap}
+#swr .sw-rail{width:100%}
+#swr .sw-rail button{flex:1 1 0;justify-content:center}
+#swr .sw-rail button.on{flex:2.6 1 0}
+@media (prefers-reduced-motion:reduce){.sw-th,.sw-x,.sw-ch,.sw-rail button,.sw-rail button .lb{transition:none!important}}
 .dirp{display:inline-block;font-size:10px;font-weight:750;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:1px 7px;vertical-align:1px}
 .dirp.long{background:color-mix(in srgb,var(--pos) 15%,transparent);color:var(--pos)}.dirp.short{background:color-mix(in srgb,var(--neg) 15%,transparent);color:var(--neg)}
 .thg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
@@ -197,18 +245,12 @@ svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stro
 
 /* research category accent: a category may set its own colour; none = the look's own accent.
    It tints the tab icon, the calendar tiles, the selected edition and the Latest tag; the look itself never changes. */
-.cattog button svg{color:color-mix(in srgb,var(--c) 62%,#fff)}
-.cattog button.on svg{color:color-mix(in srgb,var(--c) 78%,#fff)}
 .cal b{background:var(--cat,var(--side-cal))}
 .hascat .ed.on{border-color:color-mix(in srgb,var(--cat) 55%,transparent);box-shadow:inset 3px 0 0 var(--cat)}
 .hascat .tag{background:var(--cat)}
 
-/* category switch: "Ticker roll" (banner stays, headline and tape roll, cards follow) + a thumb that slides between tabs.
+/* category switch: "Ticker roll" (banner stays, headline and tape roll, cards follow); the switcher thumb slides between tabs.
    Transform and opacity only. Banners of every category share one height (--hero-h, set by sizeHeroes) so the box never jumps. */
-.cattog{position:relative;isolation:isolate}
-.cattog button{position:relative;z-index:1}
-.cattog.cx button.on{background:transparent;box-shadow:none}
-.cx-thumb{position:absolute;left:0;top:3px;bottom:3px;width:0;border-radius:8px;background:var(--cta-bg);box-shadow:0 1px 3px rgba(0,0,0,.25);pointer-events:none;z-index:0}
 .hero{display:flex;flex-direction:column;min-height:var(--hero-h,0px)}
 .hero-in{flex:1 0 auto}
 .cx-ghost{position:fixed;z-index:25;overflow:hidden;pointer-events:none;contain:layout paint style}
@@ -432,10 +474,6 @@ svg.pcurve .gl{stroke:var(--line)}svg.pcurve .z{stroke:var(--muted);opacity:.6}s
   .tape{flex-wrap:nowrap}.tape .tx-o{display:none}  /* one line: drop breakeven / month to date / names screened */
 }
 @media (max-width:900px){
-  .topbar .cattog{display:none}
-  .catrow{display:flex;padding:6px 12px;background:var(--bar);border-bottom:1px solid var(--bar-line);position:sticky;top:calc(var(--top) + env(safe-area-inset-top,0px));z-index:29;transition:transform .25s ease}
-  .catrow.away{transform:translateY(-100%)}  /* slides under the top bar while scrolling down, back on any scroll up */
-  .catrow .cattog{display:flex;margin:0;width:100%}.catrow .cattog button{flex:1;justify-content:center}
   .main{padding:14px 16px 32px}
   .two{grid-template-columns:1fr}
   .hero{min-height:0}  /* no shared banner height on small screens: it left a blank band under the buttons */
@@ -464,10 +502,7 @@ svg.pcurve .gl{stroke:var(--line)}svg.pcurve .z{stroke:var(--muted);opacity:.6}s
   .card-h .note{flex-basis:100%}
   .hero-tx .ctas{width:auto}
 }
-@media (max-width:600px){.catrow .cattog button{min-width:0;padding:0 6px;gap:5px;font-size:12.5px}}  /* four categories fit a phone row */
-@media (max-width:480px){.catrow .cattog button svg{display:none}}
 @media (max-width:560px){
-  .brand .nm2{display:none}
   .topbar{gap:8px;padding:0 12px}.topbar .brand{gap:8px}
   .hstats{grid-template-columns:repeat(2,minmax(0,1fr))}
   .hs .v{font-size:19px}
@@ -492,8 +527,8 @@ svg.pcurve .gl{stroke:var(--line)}svg.pcurve .z{stroke:var(--muted);opacity:.6}s
 <div id="app" hidden>
   <header class="topbar">
     <button class="tb-btn menu" id="menu" aria-label="Show archive"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></button>
-    <div class="brand"><span class="mk"><svg viewBox="0 0 24 24"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg></span><span class="nm">Market Pulse<span class="nm2"> Research Dashboard</span><small id="catsub">Equities · Rates · Credit · FX · Commodities</small></span></div>
-    <nav class="cattog" id="cattog" role="tablist" aria-label="Research category"></nav>
+    <div class="brand"><span class="mk"><svg viewBox="0 0 24 24"><path d="M2 12h4l3-7 4 14 3-7h6"/></svg></span><span class="nm">Market Pulse<small id="catsub">Equities · Rates · Credit · FX · Commodities</small></span></div>
+    <div id="sw"></div>
     <span class="sp"></span>
     <div class="lookpick"><button class="tb-btn" id="look" aria-haspopup="true" aria-expanded="false" title="Style" aria-label="Style"><svg class="i" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.9 1.8-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11.5" r="1.2"/><circle cx="10.5" cy="7.5" r="1.2"/><circle cx="15.5" cy="8" r="1.2"/></svg><span class="lbl" id="lookname">Style</span></button>
       <div class="lookmenu" id="lookmenu" hidden><h4>Style</h4>
@@ -503,7 +538,7 @@ svg.pcurve .gl{stroke:var(--line)}svg.pcurve .z{stroke:var(--muted);opacity:.6}s
     <button class="tb-btn" id="theme" aria-label="Switch light or dark mode" title="Light / dark"><svg class="i ic-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
     <button class="tb-btn" id="out"><svg class="i" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg><span class="lbl">Sign out</span></button>
   </header>
-  <div class="catrow"><nav class="cattog" id="cattog2" role="tablist" aria-label="Research category"></nav></div>
+  <div class="catrow"><div id="swr"></div></div>
   <div class="shell">
     <aside class="side" id="side" aria-label="Archive">
       <div class="side-h"><h2 id="sideh">Macro editions</h2><span id="count"></span></div>
@@ -1575,11 +1610,7 @@ function toggleSide(open) {
   document.getElementById("side").classList.toggle("open", open);
   document.getElementById("scrim").classList.toggle("open", open);
 }
-function drawToggle() {
-  const html = CATS.map(c => `<button role="tab" aria-selected="${c.key === CAT}" class="${c.key === CAT ? "on" : ""}" data-k="${c.key}" style="--c:${c.accent || "var(--side-cal)"}">${IC[c.icon] || IC.spark}<span>${esc(c.label)}</span></button>`).join("");
-  for (const id of ["cattog", "cattog2"]) { const n = document.getElementById(id); n.innerHTML = html; n.onclick = ev => { const b = ev.target.closest("button"); if (b && b.dataset.k !== CAT) switchCat(b.dataset.k); }; }
-  cxThumbs(CX_PREV);
-}
+function drawToggle() { const from = SW.last; SW.last = CAT; if (!SW.mode) swLayout(); else swDraw(from); }
 function applyCat() {
   const r = document.documentElement, a = catOf(CAT).accent;
   r.dataset.cat = CAT; r.classList.toggle("hascat", !!a);
@@ -1612,7 +1643,7 @@ let ROUTED = false;
 /* ---- category switch animation ("Ticker roll") ---- */
 const CX_EO = "cubic-bezier(.22,1,.36,1)", CX_EI = "cubic-bezier(.4,0,1,1)", CX_SW = "cubic-bezier(.32,.72,0,1)";
 const CX_RM = matchMedia("(prefers-reduced-motion: reduce)");
-let CX_PREV = null, CX_RUN = null;
+let CX_RUN = null;
 const $1 = s => document.querySelector(s), $all = (s, el = document) => [...el.querySelectorAll(s)];
 function cxA(el, kf, o, list) {
   if (!el) return;
@@ -1633,21 +1664,117 @@ function cxGhost(el, clip) {
   box.appendChild(inner); document.body.appendChild(box);
   return {box, inner};
 }
-function cxMeasure() { return $all(".cattog").map(n => { const b = n.querySelector("button.on"); return b && b.offsetWidth ? {x: b.offsetLeft, w: b.offsetWidth, k: b.dataset.k} : null; }); }
-function cxThumbs(prev) {
-  $all(".cattog").forEach((n, i) => {
-    const b = n.querySelector("button.on"); if (!b) return;
-    n.classList.add("cx");
-    let t = n.querySelector(".cx-thumb"); if (!t) { t = document.createElement("i"); t.className = "cx-thumb"; n.prepend(t); }
-    if (!b.offsetWidth) return;
-    t.style.width = b.offsetWidth + "px"; t.style.transform = `translateX(${b.offsetLeft}px)`;
-    const p = prev && prev[i];
-    if (!p || p.k === b.dataset.k || CX_RM.matches) return;
-    t.animate([{transform: `translateX(${p.x}px)`, width: p.w + "px"}, {transform: `translateX(${b.offsetLeft}px)`, width: b.offsetWidth + "px"}], {duration: 400, easing: CX_SW});
-    const old = n.querySelector(`button[data-k="${p.k}"]`), on = getComputedStyle(b).color, off = old ? getComputedStyle(old).color : on;
-    b.animate([{color: off}, {color: on}], {duration: 260, delay: 90, easing: "ease", fill: "backwards"});
-    if (old) old.animate([{color: on}, {color: off}], {duration: 220, easing: "ease"});
+/* ---- section switcher: full toggle when it fits, else SW_BAR in the top bar or SW_ROW in the row under it ---- */
+const SW_BAR = "c", SW_ROW = "b";   // c = icon rail (iPad portrait and similar), b = expanding pill (phones)
+const SW_MIN = {b: 230, c: 330};    // least room the compact form needs in the top bar
+const SW_SHADE = {macro: ["#2b66b3", "#13294b"], stocks: ["#1d7e88", "#062c33"], hill: ["#a3324a", "#2a0d14"], gb: ["#c9962e", "#2a1a06"], perf: ["#4253ad", "#141c45"]};  // logo tile gradients
+const SW_SV = d => `<svg class="i" viewBox="0 0 24 24">${d}</svg>`;
+let SW = {mode: "", room: 0, sig: "", last: null, open: null};
+const swKeys = () => CATS.map(c => c.key);
+const swIcon = k => IC[catOf(k).icon] || IC.spark;
+const swVars = k => { const c = catOf(k), t = SW_SHADE[k] || [c.accent || "#2b66b3", "#13294b"]; return `--c:${c.accent || "var(--side-cal)"};--t1:${t[0]};--t2:${t[1]}`; };
+const swTile = (k, cls = "") => `<span class="sw-tile ${cls}" style="${swVars(k)}">${swIcon(k)}</span>`;
+const swBtn = k => `<button role="tab" data-k="${k}" aria-selected="${k === CAT}" aria-label="${esc(catOf(k).label)}" class="${k === CAT ? "on" : ""}" style="${swVars(k)}">${swIcon(k)}<span class="lb">${esc(catOf(k).label)}</span></button>`;
+const swFull = () => `<nav class="swn sw-full" role="tablist" aria-label="Research section"><i class="sw-th"></i>${swKeys().map(swBtn).join("")}</nav>`;
+const SW_HTML = {
+  b: row => { const others = swKeys().filter(x => x !== CAT);
+    return `<button class="sw-pill${row ? " wide" : ""}" data-act="expand" aria-expanded="false" aria-label="${esc(catOf(CAT).label)}: show all sections" style="${swVars(CAT)}">${swTile(CAT)}<span class="lb">${esc(catOf(CAT).label)}</span><span class="sw-coins" aria-hidden="true">${others.map(o => swTile(o, "xs")).join("")}</span>${SW_SV('<path d="m9 6 6 6-6 6"/>').replace('class="i"', 'class="i chev"')}</button>`; },
+  c: () => `<nav class="swn sw-rail" role="tablist" aria-label="Research section">${swKeys().map(swBtn).join("")}</nav>`,
+};
+function swLayout() {
+  const bar = $1(".topbar"), brand = bar && bar.querySelector(".brand"), sw = $1("#sw");
+  if (!sw || !CATS.length || $1("#app").hidden) return;
+  swClose(true);
+  const r = document.documentElement;
+  r.classList.remove("sw-center", "sw-nosub", "sw-full", "sw-bar", "sw-row");
+  sw.innerHTML = "";
+  // brand width with the longest subtitle, so switching section never flips the layout
+  const small = brand.querySelector("small"), keep = small.textContent; let subW = 0;
+  for (const c of CATS) { small.textContent = c.sub; subW = Math.max(subW, brand.offsetWidth); }
+  small.textContent = keep;
+  r.classList.add("sw-nosub"); const bareW = brand.offsetWidth; r.classList.remove("sw-nosub");
+  const subOn = getComputedStyle(small).display !== "none";
+  const m = $1("#swm"); m.innerHTML = swFull(); const W = m.firstElementChild.offsetWidth; m.innerHTML = "";
+  const bb = bar.getBoundingClientRect(), bl = brand.getBoundingClientRect().left - bb.left, rl = $1(".lookpick").getBoundingClientRect().left - bb.left;
+  const fits = (bw, w) => { const L = bl + bw + 18, R = rl - 18;
+    if ((bb.width - w) / 2 >= L && (bb.width + w) / 2 <= R) return "center";
+    return w <= R - L ? "inline" : ""; };
+  // prefer centred (dropping the subtitle if need be) over sitting off-centre next to it
+  const withSub = subOn ? fits(subW, W) : "", bare = fits(bareW, W);
+  let f = withSub === "center" ? "center" : bare === "center" ? "center" : withSub || bare;
+  const sub = !!withSub && (withSub === "center" || bare !== "center");
+  const room = rl - bl - bareW - 36;
+  SW.mode = f ? "full" : room >= SW_MIN[SW_BAR] ? "bar" : "row"; SW.room = room; SW.sig = "";
+  if (!sub) r.classList.add("sw-nosub");
+  r.classList.add("sw-" + SW.mode);
+  swDraw(null);
+  if (SW.mode === "bar" && fits(bareW, sw.offsetWidth) === "center") f = "center";
+  if (f === "center") r.classList.add("sw-center");
+}
+function swDraw(from) {
+  if (!SW.mode) return;
+  const row = SW.mode === "row", host = $1(row ? "#swr" : "#sw"), opt = SW.mode === "full" ? "full" : row ? SW_ROW : SW_BAR;
+  $1(row ? "#sw" : "#swr").innerHTML = "";
+  const sig = opt + SW.mode + (opt === "b" ? CAT : "");
+  if (sig !== SW.sig || !host.firstElementChild) { host.innerHTML = opt === "full" ? swFull() : SW_HTML[opt](row); SW.sig = sig; }
+  else host.querySelectorAll("[data-k]").forEach(b => { const on = b.dataset.k === CAT; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+  host.querySelectorAll(".sw-full").forEach(n => {
+    const th = n.querySelector(".sw-th"), b = n.querySelector("button.on"); if (!th || !b) return;
+    if (!from || from === CAT || CX_RM.matches) th.style.transition = "none";
+    th.style.width = b.offsetWidth + "px"; th.style.transform = `translateX(${b.offsetLeft - 3}px)`;
+    th.offsetWidth; th.style.transition = "";
   });
+}
+function swClose(now) {
+  const o = SW.open; if (!o) return; SW.open = null;
+  o.trigger.setAttribute("aria-expanded", "false");
+  if (now || CX_RM.matches) { o.el.remove(); return; }
+  o.el.classList.remove("open"); o.el.style.clipPath = o.clip;
+  setTimeout(() => o.el.remove(), 380);
+}
+function swExpand(t) {
+  const inRow = !!t.closest("#swr"), host = inRow ? $1("#swr") : $1(".topbar"), hb = host.getBoundingClientRect(), tb = t.getBoundingClientRect();
+  const x = document.createElement("div"); x.className = "sw-x";
+  x.innerHTML = `<div class="sw-xs" role="tablist" aria-label="Research section">${swKeys().map((k, i) => `<button class="sw-ch${k === CAT ? " on" : ""}" role="tab" data-pick="${k}" aria-selected="${k === CAT}" style="transition-delay:${90 + i * 35}ms">${swTile(k)}${esc(catOf(k).label)}</button>`).join("")}</div><button class="sw-xc" data-act="close" aria-label="Close">${SW_SV('<path d="M6 6l12 12M18 6 6 18"/>')}</button>`;
+  host.appendChild(x);
+  // open from the pill; slide left over the title only as far as the sections need
+  const need = $all(".sw-ch", x).reduce((a, c) => a + c.offsetWidth + 4, 0) + 54, right = inRow ? 0 : 12;
+  const left = inRow ? 0 : Math.max(12, Math.min(tb.left - hb.left, hb.width - right - need)), off = inRow ? 0 : tb.left - hb.left - left;
+  Object.assign(x.style, {left: left + "px", right: right + "px"});
+  const w = x.getBoundingClientRect().width, clip = `inset(0 ${Math.max(0, w - tb.width - off)}px 0 ${off}px round 11px)`;
+  const xs = x.querySelector(".sw-xs"), edge = () => { const l = xs.scrollLeft > 2, r = xs.scrollLeft + xs.clientWidth < xs.scrollWidth - 2;
+    xs.style.setProperty("--fade", `linear-gradient(90deg,${l ? "transparent 0,#000 36px" : "#000 0"},${r ? "#000 calc(100% - 36px),transparent 100%" : "#000 100%"})`); };
+  xs.onscroll = edge; edge();
+  const on = xs.querySelector(".on"); if (on && xs.scrollWidth > xs.clientWidth) xs.scrollLeft = Math.max(0, on.offsetLeft - 40);
+  if (CX_RM.matches) x.classList.add("open");
+  else { x.style.transition = "none"; x.style.clipPath = clip; x.offsetWidth; x.style.transition = ""; requestAnimationFrame(() => { x.style.clipPath = "inset(0 0 0 0 round 13px)"; x.classList.add("open"); }); }
+  t.setAttribute("aria-expanded", "true");
+  SW.open = {el: x, trigger: t, clip};
+}
+function swBoot() {
+  const m = document.createElement("div"); m.id = "swm"; m.setAttribute("aria-hidden", "true"); $1(".topbar").appendChild(m);
+  document.addEventListener("click", ev => {
+    const t = ev.target.closest("[data-act],[data-pick],[data-k]"), o = SW.open;
+    $all(".sw-tip").forEach(x => x.remove());
+    if (o && !o.el.contains(ev.target) && t !== o.trigger) { swClose(); return; }
+    if (!t || !t.closest("#sw,#swr,.sw-x")) return;
+    const k = t.dataset.pick || t.dataset.k;
+    if (k) { swClose(); if (k !== CAT) switchCat(k); return; }
+    if (t.dataset.act === "close") swClose();
+    else if (t.dataset.act === "expand") o ? swClose() : swExpand(t);
+  });
+  document.addEventListener("keydown", ev => { if (ev.key === "Escape") swClose(); });
+  addEventListener("scroll", () => { if (SW.open && SW.mode === "row") swClose(); }, {passive: true});
+  let tip = null;   // icon rail: the section name on hover
+  document.addEventListener("pointerover", ev => {
+    const b = ev.target.closest(".sw-rail button:not(.on)"); if (tip) { tip.remove(); tip = null; } if (!b || ev.pointerType === "touch") return;
+    const r = b.getBoundingClientRect(); tip = document.createElement("div"); tip.className = "sw-tip"; tip.textContent = b.getAttribute("aria-label");
+    document.body.appendChild(tip); const w = tip.offsetWidth;
+    Object.assign(tip.style, {left: Math.min(innerWidth - w - 8, Math.max(8, r.left + r.width / 2 - w / 2)) + "px", top: (r.bottom + 8) + "px"});
+  });
+  let q = 0; new ResizeObserver(() => { cancelAnimationFrame(q); q = requestAnimationFrame(swLayout); }).observe($1(".topbar"));
+  new MutationObserver(() => requestAnimationFrame(swLayout)).observe(document.documentElement, {attributes: true, attributeFilter: ["data-look"]});
+  if (document.fonts) document.fonts.ready.then(swLayout);
 }
 function cxFinish() {
   if (!CX_RUN) return;
@@ -1662,10 +1789,8 @@ async function switchCat(k) {
   cxFinish();
   const dir = CATS.findIndex(c => c.key === k) > CATS.findIndex(c => c.key === CAT) ? 1 : -1;
   const g = {view: cxGhost($1("#view"), $1(".main")), list: cxGhost($1("#list"), $1("#side"))};
-  CX_PREV = cxMeasure();
   try { history.pushState(null, "", k === "macro" ? location.pathname + location.search : "#" + k); } catch (err) {}
   setCat(k); select("");
-  CX_PREV = null;
   const L = [], v = $1("#view"), run = {list: L, ghosts: [g.view, g.list]};
   CX_RUN = run;
   const side = [g.list].filter(Boolean);
@@ -1715,7 +1840,7 @@ function cxBoot() {
   new MutationObserver(() => requestAnimationFrame(growHero)).observe($1("#view"), {childList: true});
   Promise.all(CATS.map(c => { const e = ALL.find(x => x.cat === c.key); return e ? loadSummary(e).catch(() => null) : null; })).then(sizeHeroes)
     .then(() => Promise.all(CATS.flatMap(c => ALL.filter(x => x.cat === c.key).slice(1, 20).map(e => loadSummary(e).catch(() => null))))).then(sizeHeroes);  // recent archive, in the background
-  let q = 0; addEventListener("resize", () => { cancelAnimationFrame(q); q = requestAnimationFrame(() => { sizeHeroes(); cxThumbs(null); }); });
+  let q = 0; addEventListener("resize", () => { cancelAnimationFrame(q); q = requestAnimationFrame(sizeHeroes); });
   new MutationObserver(sizeHeroes).observe(document.documentElement, {attributes: true, attributeFilter: ["data-look", "data-theme"]});
   if (document.fonts) document.fonts.ready.then(sizeHeroes);
 }
@@ -1750,6 +1875,7 @@ async function show(raw) {
   document.getElementById("scrim").onclick = () => toggleSide(false);
   document.getElementById("q").oninput = ev => drawList(ev.target.value.trim().toLowerCase());
   window.addEventListener("hashchange", route);
+  swBoot();
   route();
   cxBoot();
 }
