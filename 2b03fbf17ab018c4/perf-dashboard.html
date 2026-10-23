@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow,noarchive,nosnippet"><meta name="referrer" content="no-referrer">
-<title>Market Pulse Performance · marked to 2026-10-21</title>
+<title>Market Pulse Performance · marked to 2026-10-22</title>
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("mr-theme")||"light"}catch(e){document.documentElement.dataset.theme="light"}
 document.documentElement.dataset.look="broadsheet";try{const l=localStorage.getItem("mr-look");if(/^(night|broadsheet|greenback)$/.test(l))document.documentElement.dataset.look=l}catch(e){}</script>
 <!-- template: site file page v2.0.1 (slim bar with archive link and format switcher above the decrypted file) -->
@@ -60,8 +60,15 @@ const KIND = "dashboard", NAME = "Market_Pulse_Performance.html", HOME = "../#pe
   let bytes;
   try {
     const res = await fetch(BIN, {cache: "no-cache"});
+    if (!res.ok) throw new Error(res.status);
     bytes = await decrypt(raw, await res.arrayBuffer());
-  } catch (e) { forget(); location.replace(HOME.split("#")[0]); return; }
+  } catch (e) {
+    // the home page re-checks the saved key and asks again if the password changed; a file that will not open here
+    // must not wipe the key, or the reader is sent round the sign-in screen without ever seeing why
+    const m = document.getElementById("msg");
+    m.innerHTML = `This page could not be opened right now. Please go back and try again.<br><a href="${HOME}">Back to the archive</a>`;
+    return;
+  }
   if (GZ) bytes = new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
   const msg = document.getElementById("msg");
   if (KIND === "pdf") {

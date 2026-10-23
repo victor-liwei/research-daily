@@ -60,8 +60,15 @@ const KIND = "pdf", NAME = "Capitol_Hill_2026-10-16.pdf", HOME = "../#hill/2026-
   let bytes;
   try {
     const res = await fetch(BIN, {cache: "no-cache"});
+    if (!res.ok) throw new Error(res.status);
     bytes = await decrypt(raw, await res.arrayBuffer());
-  } catch (e) { forget(); location.replace(HOME.split("#")[0]); return; }
+  } catch (e) {
+    // the home page re-checks the saved key and asks again if the password changed; a file that will not open here
+    // must not wipe the key, or the reader is sent round the sign-in screen without ever seeing why
+    const m = document.getElementById("msg");
+    m.innerHTML = `This page could not be opened right now. Please go back and try again.<br><a href="${HOME}">Back to the archive</a>`;
+    return;
+  }
   if (GZ) bytes = new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
   const msg = document.getElementById("msg");
   if (KIND === "pdf") {
