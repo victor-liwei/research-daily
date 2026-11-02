@@ -22,8 +22,8 @@
   "stocks-2026-10-09-pdf.html": "776d0f00c7c27574b6e9f8985d34de738fed08546f62c00284ea5a8e1431d7b3",
   "stocks-2026-10-09-email.html": "326fae291a3d8cf0f6c818225288c3c0da63743d1562c1b1715940a057d11c84",
   "stocks-2026-10-09-summary.bin": "fe0ce0cc9532dc60f540c137b8253947baecbf0b53509d2c996797c1556787d9",
-  "perf-dashboard.html": "d4e7542eddf1bdaa039e84ac69d70d8e85c5ebaa74d3fe1b4c58d1acd94b2b99",
-  "perf-summary.bin": "94b5bfcf6aa653dbbae49a5800058f6141444469814b43393d527a9b5409e930",
+  "perf-dashboard.html": "1b7b4b70a2618150eafe9ff85b498c5ec958783d1d070e3c5bb30416b55a201a",
+  "perf-summary.bin": "9e2eb7dff996821f0fe5af31309d6cc062bb326915ff2df72120714bf4afdfed",
   "hill-2026-10-10-dashboard.html": "6c8d6028c9216aafd813f02af45bf8998625f3f321da5f9925331a0e948318d7",
   "hill-2026-10-10-pdf.html": "4cf69adfdac515e070a0dd7f85d2ea0b8fad1674b4e6a062afdef24feee4fd7a",
   "hill-2026-10-10-email.html": "cefb4c011a77c4b81356be50343820fbdf9ac41ecd53e56a2e9f022bde613227",
@@ -251,7 +251,11 @@
   "stocks-2026-11-02-dashboard.html": "bba100399f649a48b0b16522ac7e23859c004b91bac24c996dabd45200bd16ba",
   "stocks-2026-11-02-pdf.html": "96a26e35bb575f12ad6269688509f72592c21ddad8ce845bafb7ba68431cf47a",
   "stocks-2026-11-02-email.html": "332c7b41b25edadba7cf754d5cc746b1115abb281155a29406c9df2c69896e94",
-  "stocks-2026-11-02-summary.bin": "fff5472ad2f368bd01f9870bb01b822c0956a2857a9113ebd4fad2d4e5d72b34"
+  "stocks-2026-11-02-summary.bin": "fff5472ad2f368bd01f9870bb01b822c0956a2857a9113ebd4fad2d4e5d72b34",
+  "gb-2026-11-02-dashboard.html": "bdc11cae2c98e1bc0f4d5d7ed859f7235ade57d5c071e8f2bfbbce73a7b2412b",
+  "gb-2026-11-02-pdf.html": "50e48d523e8edae3ea6c1da9bdd0452db8d7de45064ba8ac2cbb3e2a81e62e8c",
+  "gb-2026-11-02-email.html": "a1643c2688f8bc96466d33e921014336f4647d26b54ebbf3dc140e3515074d66",
+  "gb-2026-11-02-summary.bin": "6b1253d3e7949e9fd137e4db1f89e107b73747ba5532d17af12c9efb55a083ee"
  },
  "key_check": "576b2c5e161fe2c1"
 }
